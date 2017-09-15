@@ -53,4 +53,4 @@ var LANGUAGE_CODE_MARATHI = "mr";
 var LANGUAGE_CODE_HINDI = "hi";
 
 //// Other:
-var ID_DIV = " $ ";
+var ID_DIV = " ~ ";

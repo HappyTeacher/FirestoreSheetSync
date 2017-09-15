@@ -43,7 +43,7 @@ function getNameObjectFromBoardRow(row) {
 }
 
 function onSyncBoardRow(rowNumber, boardSheet) {
-  boardSheet.getRange(row + 1, 5 + 1).setBackground("red");
+  //boardSheet.getRange(rowNumber + 1, 5 + 1).setBackground("red");
 }
 
 function generateBoardIdFromRow(row) {
