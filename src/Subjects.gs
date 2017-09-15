@@ -1,3 +1,7 @@
+function writeSubjectIds(subjectsSheet) {
+  writeIds(subjectsSheet, SUBJECTS_COLUMN_ID, generateSubjectIdFromRow);
+}
+
 function writeSubjectsToFirebase(subjectsData) {
   var base = FirebaseApp.getDatabaseByUrl(FIREBASE_URL, SECRET);
     
@@ -27,13 +31,19 @@ function getNamesObjectFromSubjectRow(row) {
         
   if (engName) {
     names[LANGUAGE_CODE_ENGLISH] = engName;
-  } 
+  }
   if (marName) {
     names[LANGUAGE_CODE_MARATHI] = marName;
-  } 
+  }
   if (hinName) {
     names[LANGUAGE_CODE_HINDI] = hinName;
   }
   
   return names;
+}
+
+function generateSubjectIdFromRow(row) {
+  var nameEnglish = row[SUBJECTS_COLUMN_ENGLISH_NAME];
+
+  return nameEnglish.toLowerCase();
 }

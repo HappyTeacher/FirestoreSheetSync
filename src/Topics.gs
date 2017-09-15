@@ -1,3 +1,7 @@
+function writeTopicIds(topicsSheet) {
+  writeIds(topicsSheet, TOPICS_COLUMN_ID, generateTopicIdFromRow);
+}
+
 function writeTopicsToFirebase(topicsData, subjectsData) {
   var base = FirebaseApp.getDatabaseByUrl(FIREBASE_URL, SECRET);
   
@@ -40,10 +44,16 @@ function getNamesObjectFromTopicRow(row) {
   }
   if (marName) {
     names[LANGUAGE_CODE_MARATHI] = marName;
-  } 
+  }
   if (hinName) {
     names[LANGUAGE_CODE_HINDI] = hinName;
   }
   
   return names;
+}
+
+function generateTopicIdFromRow(row) {
+  var subject = row[TOPICS_COLUMN_SUBJECT_ID];
+  var topic = row[TOPICS_COLUMN_ENGLISH_NAME];
+  return (subject + ID_DIV + topic).toLowerCase();
 }

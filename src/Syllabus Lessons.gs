@@ -1,3 +1,7 @@
+function writeSyllabusLessonIds(syllabusLessonSheet) {
+  writeIds(syllabusLessonSheet, SYLLABUS_COLUMN_LESSON_ID, generateSyllabusLessonIdFromRow);
+}
+
 function writeSyllabusLessonsToFirebase(syllabusLessonData, boardData, pairData) {
   var base = FirebaseApp.getDatabaseByUrl(FIREBASE_URL, SECRET);
    
@@ -24,7 +28,7 @@ function writeSyllabusLessonsToFirebase(syllabusLessonData, boardData, pairData)
       var lessonId = lessonRow[SYLLABUS_COLUMN_LESSON_ID];
       
       if (!lessonId) {
-        throw new Error("No ID specified for this syllabus lesson plan. Make sure all rows have an ID defined."); 
+        throw new Error("No ID specified for this syllabus lesson plan. Make sure all rows have an ID defined.");
       }
       
       var topicsAndCount = getTopicPairsAndCount(lessonId, pairData);
@@ -46,7 +50,7 @@ function writeSyllabusLessonsToFirebase(syllabusLessonData, boardData, pairData)
   base.setData("syllabusLessons", lessonsByBoard);
 }
 
-function getTopicPairsAndCount(syllabusLessonId, pairData) {    
+function getTopicPairsAndCount(syllabusLessonId, pairData) {
   // Find pairs for this lesson ID:
   var topicsForLesson = ArrayLib.filterByText(pairData, PAIR_COLUMN_LESSON_ID, syllabusLessonId);
     
@@ -73,13 +77,22 @@ function getNameObjectFromSyllabusLessonRow(row) {
         
   if (engName) {
     names[LANGUAGE_CODE_ENGLISH] = engName;
-  } 
+  }
   if (marName) {
     names[LANGUAGE_CODE_MARATHI] = marName;
-  } 
+  }
   if (hinName) {
     names[LANGUAGE_CODE_HINDI] = hinName;
   }
   
   return names;
+}
+
+function generateSyllabusLessonIdFromRow(row) {
+  var board = row[SYLLABUS_COLUMN_SYLLABUS_BOARD_LINK];
+  var standard = row[SYLLABUS_COLUMN_STANDARD];
+  var subject = row[SYLLABUS_COLUMN_SUBJECT];
+  var lessonNameEnglish = row[SYLLABUS_COLUMN_ENGLISH_NAME];
+
+  return (board + ID_DIV + standard + ID_DIV + subject + ID_DIV + lessonNameEnglish).toLowerCase();
 }

@@ -51,3 +51,6 @@ var LESSON_NUMBER = "lessonNumber";
 var LANGUAGE_CODE_ENGLISH = "en";
 var LANGUAGE_CODE_MARATHI = "mr";
 var LANGUAGE_CODE_HINDI = "hi";
+
+//// Other:
+var ID_DIV = " $ ";
