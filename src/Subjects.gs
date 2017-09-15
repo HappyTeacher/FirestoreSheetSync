@@ -1,11 +1,7 @@
-function writeSubjectsToFirebase() {
+function writeSubjectsToFirebase(subjectsData) {
   var base = FirebaseApp.getDatabaseByUrl(FIREBASE_URL, SECRET);
-  
-  var HappyTeacherSpreadsheet = SpreadsheetApp.openById(SHEET_ID);
-  var subjectsSheet = HappyTeacherSpreadsheet.getSheetByName("Subjects");
-  var subjectsData = subjectsSheet.getDataRange().getValues();
-  
-  var subjectsObject = {}
+    
+  var subjectsObject = {};
   for (var i = 1; i < subjectsData.length; i++) {
     var row = subjectsData[i];
     
@@ -13,7 +9,7 @@ function writeSubjectsToFirebase() {
     var isActive = row[SUBJECTS_COLUMN_IS_ACTIVE];
     var names = getNamesObjectFromSubjectRow(row);
     
-    var subjectObject = {}
+    var subjectObject = {};
     subjectObject[NAMES] = names;
     subjectObject[IS_ACTIVE] = isActive;
     

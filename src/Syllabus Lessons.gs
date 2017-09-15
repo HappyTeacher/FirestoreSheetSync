@@ -1,24 +1,9 @@
-function onSyllabusEdit() {
-  writeSyllabusLessonsToFirebase();
-}
-
-function writeSyllabusLessonsToFirebase() {
+function writeSyllabusLessonsToFirebase(syllabusLessonData, boardData, pairData) {
   var base = FirebaseApp.getDatabaseByUrl(FIREBASE_URL, SECRET);
-  var HappyTeacherSpreadsheet = SpreadsheetApp.openById(SHEET_ID);
-  
-  var syllabusLessonsSheet = HappyTeacherSpreadsheet.getSheetByName("Syllabus Lessons");
-  var syllabusLessonData = syllabusLessonsSheet.getDataRange().getValues();
-  
-  var boardSheet = HappyTeacherSpreadsheet.getSheetByName("Boards");
-  var boardData = boardSheet.getDataRange().getValues();
-  
-  var pairSheet = HappyTeacherSpreadsheet.getSheetByName("Syllabus Lessons * Topics");
-  var pairData = pairSheet.getDataRange().getValues();
    
-  var lessonsByBoard = {}
+  var lessonsByBoard = {};
   for (var i = 1; i < boardData.length; i++) {
-    var boardId = boardData[i][BOARDS_COLUMN_BOARD_ID]
-    Logger.log(boardId);
+    var boardId = boardData[i][BOARDS_COLUMN_BOARD_ID];
     var lessonsForBoard = ArrayLib.filterByText(syllabusLessonData, SYLLABUS_COLUMN_SYLLABUS_BOARD_LINK, boardId);
      
     boardLessonsObject = {};
@@ -42,7 +27,7 @@ function writeSyllabusLessonsToFirebase() {
         throw new Error("No ID specified for this syllabus lesson plan. Make sure all rows have an ID defined."); 
       }
       
-      var topicsAndCount = getTopicPairsAndCount(lessonId, pairData)
+      var topicsAndCount = getTopicPairsAndCount(lessonId, pairData);
       lessonObject[TOPICS] = topicsAndCount[TOPICS];
       lessonObject[TOPIC_COUNT] = topicsAndCount[TOPIC_COUNT];
        
@@ -66,17 +51,17 @@ function getTopicPairsAndCount(syllabusLessonId, pairData) {
   var topicsForLesson = ArrayLib.filterByText(pairData, PAIR_COLUMN_LESSON_ID, syllabusLessonId);
     
   // Create object of associations -- {id: true} if associated
-  var associatedTopicsObject = {}
+  var associatedTopicsObject = {};
   for (var j = 0; j < topicsForLesson.length; j++) {
     var topicId = topicsForLesson[j][PAIR_COLUMN_TOPIC_ID];
     associatedTopicsObject[topicId] = true;
   }
   
-  var payload = {}
+  var payload = {};
   payload[TOPIC_COUNT] = topicsForLesson.length;
   payload[TOPICS] = associatedTopicsObject;
   
-  return payload
+  return payload;
 }
 
 function getNameObjectFromSyllabusLessonRow(row) {
@@ -97,12 +82,4 @@ function getNameObjectFromSyllabusLessonRow(row) {
   }
   
   return names;
-}
-
-function setSyllabusEditTrigger() {
-  var sheet = SpreadsheetApp.getActive();
-  ScriptApp.newTrigger("onSyllabusEdit")
-   .forSpreadsheet(sheet)
-   .onEdit()
-   .create();
 }

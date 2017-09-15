@@ -1,25 +1,19 @@
-function onBoardsEdit() {
-  writeBoardsToFirebase();
-}
-
-function writeBoardsToFirebase() {
-  var HappyTeacherSpreadsheet = SpreadsheetApp.openById(SHEET_ID);
-  var boardSheet = HappyTeacherSpreadsheet.getSheetByName("Boards");
-  var data = boardSheet.getDataRange().getValues();
-  
-  Logger.log(data);
-  
+function writeBoardsToFirebase(boardSheet, data, onSyncRow) {  
   // Create new JSON object to import!
   var boards = {};
   for (var i = 1; i < data.length; i++) {
-    var row = data[i]
+    var row = data[i];
     var boardId = row[BOARDS_COLUMN_BOARD_ID];
     
     var board = {};
-    board[NAMES] = getNameObjectFromBoardRow(row)
+    board[NAMES] = getNameObjectFromBoardRow(row);
     board[IS_ACTIVE] = data[i][BOARDS_COLUMN_IS_ACTIVE];
     
     boards[boardId] = board;
+
+    Logger.log("DINGUS");
+
+    onSyncRow(i);
   }  
   
   var base = FirebaseApp.getDatabaseByUrl(FIREBASE_URL, SECRET);
@@ -44,12 +38,4 @@ function getNameObjectFromBoardRow(row) {
   }
   
   return names;
-}
-
-function setBoardsEditTrigger() {
-  var sheet = SpreadsheetApp.getActive();
-  ScriptApp.newTrigger("onBoardsEdit")
-   .forSpreadsheet(sheet)
-   .onEdit()
-   .create();
 }

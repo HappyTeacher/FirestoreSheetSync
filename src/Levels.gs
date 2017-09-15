@@ -1,11 +1,7 @@
-function writeLevelsToFirebase() {
+function writeLevelsToFirebase(levelsData) {
   var base = FirebaseApp.getDatabaseByUrl(FIREBASE_URL, SECRET);
-  
-  var HappyTeacherSpreadsheet = SpreadsheetApp.openById(SHEET_ID);
-  var levelsSheet = HappyTeacherSpreadsheet.getSheetByName("Levels");
-  var levelsData = levelsSheet.getDataRange().getValues();
-  
-  var levelsObject = {}
+    
+  var levelsObject = {};
   for (var i = 1; i < levelsData.length; i++) {
     var row = levelsData[i];
     

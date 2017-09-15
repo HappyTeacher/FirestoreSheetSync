@@ -1,15 +1,8 @@
-function writeTopicsToFirebase() {
+function writeTopicsToFirebase(topicsData, subjectsData) {
   var base = FirebaseApp.getDatabaseByUrl(FIREBASE_URL, SECRET);
   
-  var HappyTeacherSpreadsheet = SpreadsheetApp.openById(SHEET_ID);
-  var topicsSheet = HappyTeacherSpreadsheet.getSheetByName("Topics");
-  var topicsData = topicsSheet.getDataRange().getValues();
-  
-  var subjectsSheet = HappyTeacherSpreadsheet.getSheetByName("Subjects");
-  var subjectsData = subjectsSheet.getDataRange().getValues();
-  
   // Put topics as children of their subject
-  var topicsBySubject = {}
+  var topicsBySubject = {};
   for (var i = 1; i < subjectsData.length; i++) {
     var subjectId = subjectsData[i][SUBJECTS_COLUMN_ID];
     var topics = {};
@@ -23,7 +16,7 @@ function writeTopicsToFirebase() {
       var subject = row[TOPICS_COLUMN_SUBJECT_ID];
       var isActive = row[TOPICS_COLUMN_IS_ACTIVE];
     
-      var topicObject = {}
+      var topicObject = {};
       topicObject[NAMES] = names;
       topicObject[SUBJECT] = subject;
       topicObject[IS_ACTIVE] = isActive;
@@ -44,7 +37,7 @@ function getNamesObjectFromTopicRow(row) {
         
   if (engName) {
     names[LANGUAGE_CODE_ENGLISH] = engName;
-  } 
+  }
   if (marName) {
     names[LANGUAGE_CODE_MARATHI] = marName;
   } 
