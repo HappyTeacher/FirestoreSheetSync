@@ -1,8 +1,8 @@
-function writeLevelsToFirebase(levelsData) {
+function writeLevelsToFirebaseForLanguage(languageCode, levelsData) {
   var base = FirebaseApp.getDatabaseByUrl(FIREBASE_URL, SECRET);
     
   var levelsObject = {};
-  for (var i = 1; i < levelsData.length; i++) {
+  for (var i = 0; i < levelsData.length; i++) {
     var row = levelsData[i];
     
     var number = row[LEVELS_COLUMNS[NUMBER]];
@@ -10,5 +10,5 @@ function writeLevelsToFirebase(levelsData) {
     
     levelsObject[number] = isActive;
   }
-  base.setData("levels", levelsObject);
+  base.setData(languageCode + "/levels", levelsObject);
 }

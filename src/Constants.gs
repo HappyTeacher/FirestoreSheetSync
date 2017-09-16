@@ -1,5 +1,6 @@
 //// KEYS
 var NAMES = "names";
+var NAME = "name";
 var SUBJECT = "subject";
 var TOPICS = "topics";
 var TOPIC_COUNT = "topicCount";
