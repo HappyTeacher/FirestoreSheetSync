@@ -1,5 +1,5 @@
 function writeTopicIds(topicsSheet) {
-  writeIds(topicsSheet, TOPICS_COLUMN_ID, generateTopicIdFromRow);
+  writeIds(topicsSheet, TOPICS_COLUMNS[ID], generateTopicIdFromRow);
 }
 
 function writeTopicsToFirebase(topicsData, subjectsData) {
@@ -8,17 +8,17 @@ function writeTopicsToFirebase(topicsData, subjectsData) {
   // Put topics as children of their subject
   var topicsBySubject = {};
   for (var i = 1; i < subjectsData.length; i++) {
-    var subjectId = subjectsData[i][SUBJECTS_COLUMN_ID];
+    var subjectId = subjectsData[i][SUBJECTS_COLUMNS[ID]];
     var topics = {};
     
-    topicsWithSubject = ArrayLib.filterByText(topicsData, TOPICS_COLUMN_SUBJECT_ID, subjectId);
+    topicsWithSubject = ArrayLib.filterByText(topicsData, TOPICS_COLUMNS[SUBJECT], subjectId);
     for (var j = 0; j < topicsWithSubject.length; j++) {
       var row = topicsWithSubject[j];
     
-      var id = row[TOPICS_COLUMN_ID];
+      var id = row[TOPICS_COLUMNS[ID]];
       var names = getNamesObjectFromTopicRow(row);
-      var subject = row[TOPICS_COLUMN_SUBJECT_ID];
-      var isActive = row[TOPICS_COLUMN_IS_ACTIVE];
+      var subject = row[TOPICS_COLUMNS[SUBJECT]];
+      var isActive = row[TOPICS_COLUMNS[IS_ACTIVE]];
     
       var topicObject = {};
       topicObject[NAMES] = names;
@@ -35,25 +35,25 @@ function writeTopicsToFirebase(topicsData, subjectsData) {
 function getNamesObjectFromTopicRow(row) {
   var names = {};
       
-  var engName = row[TOPICS_COLUMN_ENGLISH_NAME];
-  var marName = row[TOPICS_COLUMN_MARATHI_NAME];
-  var hinName = row[TOPICS_COLUMN_HINDI_NAME];
+  var engName = row[TOPICS_COLUMNS[NAMES][ENGLISH_LOCALE]];
+  var marName = row[TOPICS_COLUMNS[NAMES][MARATHI_LOCALE]];
+  var hinName = row[TOPICS_COLUMNS[NAMES][HINDI_LOCALE]];
         
   if (engName) {
-    names[LANGUAGE_CODE_ENGLISH] = engName;
+    names[ENGLISH_LOCALE] = engName;
   }
   if (marName) {
-    names[LANGUAGE_CODE_MARATHI] = marName;
+    names[MARATHI_LOCALE] = marName;
   }
   if (hinName) {
-    names[LANGUAGE_CODE_HINDI] = hinName;
+    names[HINDI_LOCALE] = hinName;
   }
   
   return names;
 }
 
 function generateTopicIdFromRow(row) {
-  var subject = row[TOPICS_COLUMN_SUBJECT_ID];
-  var topic = row[TOPICS_COLUMN_ENGLISH_NAME];
+  var subject = row[TOPICS_COLUMNS[SUBJECT]];
+  var topic = row[TOPICS_COLUMNS[NAMES][ENGLISH_LOCALE]];
   return (subject + ID_DIV + topic).toLowerCase();
 }

@@ -1,5 +1,5 @@
 function writeBoardIds(boardSheet) {
-  writeIds(boardSheet, BOARDS_COLUMN_BOARD_ID, generateBoardIdFromRow);
+  writeIds(boardSheet, BOARDS_COLUMNS[ID], generateBoardIdFromRow);
 }
 
 function writeBoardsToFirebase(boardSheet, data) {
@@ -7,11 +7,11 @@ function writeBoardsToFirebase(boardSheet, data) {
   var boards = {};
   for (var i = 1; i < data.length; i++) {
     var row = data[i];
-    var boardId = row[BOARDS_COLUMN_BOARD_ID];
+    var boardId = row[BOARDS_COLUMNS[ID]];
     
     var board = {};
     board[NAMES] = getNameObjectFromBoardRow(row);
-    board[IS_ACTIVE] = data[i][BOARDS_COLUMN_IS_ACTIVE];
+    board[IS_ACTIVE] = data[i][BOARDS_COLUMNS[IS_ACTIVE]];
     
     boards[boardId] = board;
 
@@ -25,18 +25,18 @@ function writeBoardsToFirebase(boardSheet, data) {
 function getNameObjectFromBoardRow(row) {
   var names = {};
       
-  var engName = row[BOARDS_COLUMN_ENGLISH_NAME];
-  var marName = row[BOARDS_COLUMN_MARATHI_NAME];
-  var hinName = row[BOARDS_COLUMN_HINDI_NAME];
+  var engName = row[BOARDS_COLUMNS[NAMES][ENGLISH_LOCALE]];
+  var marName = row[BOARDS_COLUMNS[NAMES][MARATHI_LOCALE]];
+  var hinName = row[BOARDS_COLUMNS[NAMES][HINDI_LOCALE]];
         
   if (engName) {
-    names[LANGUAGE_CODE_ENGLISH] = engName;
+    names[ENGLISH_LOCALE] = engName;
   }
   if (marName) {
-    names[LANGUAGE_CODE_MARATHI] = marName;
+    names[MARATHI_LOCALE] = marName;
   }
   if (hinName) {
-    names[LANGUAGE_CODE_HINDI] = hinName;
+    names[HINDI_LOCALE] = hinName;
   }
   
   return names;
@@ -47,6 +47,9 @@ function onSyncBoardRow(rowNumber, boardSheet) {
 }
 
 function generateBoardIdFromRow(row) {
-  var boardTitleEnglish = row[BOARDS_COLUMN_ENGLISH_NAME];
+  Logger.log(BOARDS_COLUMNS);
+  Logger.log(NAMES);
+  Logger.log(BOARDS_COLUMNS[ID]);
+  var boardTitleEnglish = row[BOARDS_COLUMNS[NAMES][ENGLISH_LOCALE]];
   return boardTitleEnglish.toLowerCase();
 }

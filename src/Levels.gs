@@ -5,8 +5,8 @@ function writeLevelsToFirebase(levelsData) {
   for (var i = 1; i < levelsData.length; i++) {
     var row = levelsData[i];
     
-    var number = row[LEVELS_COLUMN_NUMBER];
-    var isActive = row[LEVELS_COLUMN_IS_ACTIVE];
+    var number = row[LEVELS_COLUMNS[NUMBER]];
+    var isActive = row[LEVELS_COLUMNS[IS_ACTIVE]];
     
     levelsObject[number] = isActive;
   }

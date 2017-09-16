@@ -1,5 +1,5 @@
 function writeSubjectIds(subjectsSheet) {
-  writeIds(subjectsSheet, SUBJECTS_COLUMN_ID, generateSubjectIdFromRow);
+  writeIds(subjectsSheet, SUBJECTS_COLUMNS[ID], generateSubjectIdFromRow);
 }
 
 function writeSubjectsToFirebase(subjectsData) {
@@ -9,8 +9,8 @@ function writeSubjectsToFirebase(subjectsData) {
   for (var i = 1; i < subjectsData.length; i++) {
     var row = subjectsData[i];
     
-    var id = row[SUBJECTS_COLUMN_ID];
-    var isActive = row[SUBJECTS_COLUMN_IS_ACTIVE];
+    var id = row[SUBJECTS_COLUMNS[ID]];
+    var isActive = row[SUBJECTS_COLUMNS[IS_ACTIVE]];
     var names = getNamesObjectFromSubjectRow(row);
     
     var subjectObject = {};
@@ -25,25 +25,25 @@ function writeSubjectsToFirebase(subjectsData) {
 function getNamesObjectFromSubjectRow(row) {
   var names = {};
       
-  var engName = row[SUBJECTS_COLUMN_ENGLISH_NAME];
-  var marName = row[SUBJECTS_COLUMN_MARATHI_NAME];
-  var hinName = row[SUBJECTS_COLUMN_HINDI_NAME];
+  var engName = row[SUBJECTS_COLUMNS[NAMES][ENGLISH_LOCALE]];
+  var marName = row[SUBJECTS_COLUMNS[NAMES][MARATHI_LOCALE]];
+  var hinName = row[SUBJECTS_COLUMNS[NAMES][HINDI_LOCALE]];
         
   if (engName) {
-    names[LANGUAGE_CODE_ENGLISH] = engName;
+    names[ENGLISH_LOCALE] = engName;
   }
   if (marName) {
-    names[LANGUAGE_CODE_MARATHI] = marName;
+    names[MARATHI_LOCALE] = marName;
   }
   if (hinName) {
-    names[LANGUAGE_CODE_HINDI] = hinName;
+    names[HINDI_LOCALE] = hinName;
   }
   
   return names;
 }
 
 function generateSubjectIdFromRow(row) {
-  var nameEnglish = row[SUBJECTS_COLUMN_ENGLISH_NAME];
+  var nameEnglish = row[SUBJECTS_COLUMNS[NAMES][ENGLISH_LOCALE]];
 
   return nameEnglish.toLowerCase();
 }
