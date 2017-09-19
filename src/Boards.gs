@@ -2,7 +2,7 @@ function writeBoardIds(boardSheet) {
   writeIds(boardSheet, BOARDS_COLUMNS[ID], generateBoardIdFromRow);
 }
 
-function writeBoardsToFirebaseForLanguage(languageCode, data) {
+function writeBoardsToFirebaseForLanguage(languageCode, data, syllabusLessonData) {
   var columnForLanguageName = BOARDS_COLUMNS[NAMES][languageCode];
   if (!columnForLanguageName) {
     throw new Error("The language " + languageCode + " does not have a NAME column assigned. Operation cancelled.");
@@ -23,12 +23,36 @@ function writeBoardsToFirebaseForLanguage(languageCode, data) {
     
     boards[boardId] = board;
 
+    addBoardSubjectsAndLevelsToBoard(board, boardId, syllabusLessonData);
+
     currentRow++;
     row = sortedData[currentRow];
   }
   
   var base = FirebaseApp.getDatabaseByUrl(FIREBASE_URL, SECRET);
   base.setData(languageCode + "/boards", boards);
+}
+
+function addBoardSubjectsAndLevelsToBoard(board, boardId, syllabusLessonData) {
+  var boardLessons = ArrayLib.filterByText(syllabusLessonData, SYLLABUS_COLUMNS[BOARD], boardId);
+  var uniqueSubjectRows = ArrayLib.unique(boardLessons, SYLLABUS_COLUMNS[SUBJECT]);
+  var uniqueLevelRows = ArrayLib.unique(boardLessons, SYLLABUS_COLUMNS[LEVEL]);
+
+  boardSubjectsObject = {};
+  for (var i = 0; i < uniqueSubjectRows.length; i++) {
+    var boardSubject = uniqueSubjectRows[i][SYLLABUS_COLUMNS[SUBJECT]];
+    boardSubjectsObject[boardSubject] = true;
+  }
+
+  boardLevelsObject = {};
+  for (var j = 0; j < uniqueLevelRows.length; j++) {
+    var boardLevel = uniqueLevelRows[j][SYLLABUS_COLUMNS[LEVEL]];
+    boardLevelsObject[boardLevel] = true;
+  }
+
+  board[SUBJECTS] = boardSubjectsObject;
+  board[LEVELS] = boardLevelsObject;
+
 }
 
 function generateBoardIdFromRow(row) {
