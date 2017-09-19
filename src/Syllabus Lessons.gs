@@ -43,11 +43,9 @@ function writeSyllabusLessonsToFirebaseForLanguage(languageCode, syllabusLessonD
       if (!lessonId) {
         throw new Error("No ID specified for this syllabus lesson plan. Make sure all rows have an ID defined.");
       }
+
+      addTopicPairsAndCountToLesson(lessonObject, lessonId, pairData);
       
-      var topicsAndCount = getTopicPairsAndCount(lessonId, pairData);
-      lessonObject[TOPICS] = topicsAndCount[TOPICS];
-      lessonObject[TOPIC_COUNT] = topicsAndCount[TOPIC_COUNT];
-       
       if (!boardLessonsObject[subject]) {
         boardLessonsObject[subject] = {};
       }
@@ -67,7 +65,7 @@ function writeSyllabusLessonsToFirebaseForLanguage(languageCode, syllabusLessonD
   base.setData(languageCode + "/syllabusLessons", lessonsByBoard);
 }
 
-function getTopicPairsAndCount(syllabusLessonId, pairData) {
+function addTopicPairsAndCountToLesson(lessonObject, syllabusLessonId, pairData) {
   // Find pairs for this lesson ID:
   var topicsForLesson = ArrayLib.filterByText(pairData, PAIR_COLUMNS[LESSON], syllabusLessonId);
     
@@ -77,12 +75,9 @@ function getTopicPairsAndCount(syllabusLessonId, pairData) {
     var topicId = topicsForLesson[j][PAIR_COLUMNS[TOPIC]];
     associatedTopicsObject[topicId] = true;
   }
-  
-  var payload = {};
-  payload[TOPIC_COUNT] = topicsForLesson.length;
-  payload[TOPICS] = associatedTopicsObject;
-  
-  return payload;
+
+  lessonObject[TOPICS] = associatedTopicsObject;
+  lessonObject[TOPIC_COUNT] = topicsForLesson.length;
 }
 
 function generateSyllabusLessonIdFromRow(row) {
