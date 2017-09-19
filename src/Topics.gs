@@ -28,12 +28,10 @@ function writeTopicsToFirebaseForLanguage(languageCode, topicsData, subjectsData
       var id = row[TOPICS_COLUMNS[ID]];
       var name = row[TOPICS_COLUMNS[NAMES][languageCode]];
       var subject = row[TOPICS_COLUMNS[SUBJECT]];
-      var isActive = row[TOPICS_COLUMNS[IS_ACTIVE]];
     
       var topicObject = {};
       topicObject[NAME] = name;
       topicObject[SUBJECT] = subject;
-      topicObject[IS_ACTIVE] = isActive;
     
       topics[id] = topicObject;
       

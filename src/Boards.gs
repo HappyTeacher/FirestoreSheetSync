@@ -20,7 +20,6 @@ function writeBoardsToFirebaseForLanguage(languageCode, data) {
     
     var board = {};
     board[NAME] = row[BOARDS_COLUMNS[NAMES][languageCode]];
-    board[IS_ACTIVE] = row[BOARDS_COLUMNS[IS_ACTIVE]];
     
     boards[boardId] = board;
 

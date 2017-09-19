@@ -14,19 +14,31 @@ function writeSubjectsToFirebaseForLanguage(languageCode, subjectsData) {
   var sortedData = ArrayLib.sort(subjectsData, columnForLanguageName, false); // false => descending
     
   var subjectsObject = {};
+
+  // Keep track of whether a parent subject has children (for
+  //  populating a boolean field). Keep track of this outside 
+  //  the loop in case a child is encountered before parent.
+  var subjectHasChildrenMap = {};
   
   var currentRow = 0;
   var row = sortedData[currentRow];
   while (row && row[SUBJECTS_COLUMNS[NAMES][languageCode]]) {
     
     var id = row[SUBJECTS_COLUMNS[ID]];
-    var isActive = row[SUBJECTS_COLUMNS[IS_ACTIVE]];
     var name = row[SUBJECTS_COLUMNS[NAMES][languageCode]];
+    var parent = row[SUBJECTS_COLUMNS[PARENT_SUBJECT]];
+    var hasChildren = subjectHasChildrenMap[id];
     
     var subjectObject = {};
     subjectObject[NAME] = name;
-    subjectObject[IS_ACTIVE] = isActive;
-    
+    subjectObject[HAS_CHILDREN] = hasChildren;
+
+    if (parent) {
+      subjectObject[PARENT_SUBJECT] = parent;
+      subjectHasChildrenMap[parent] = true;
+      subjectsObject[parent][HAS_CHILDREN] = true;
+    }
+
     subjectsObject[id] = subjectObject;
 
     currentRow++;
