@@ -41,18 +41,25 @@ function addBoardSubjectsAndLevelsToBoard(board, boardId, syllabusLessonData) {
   boardSubjectsObject = {};
   for (var i = 0; i < uniqueSubjectRows.length; i++) {
     var boardSubject = uniqueSubjectRows[i][SYLLABUS_COLUMNS[SUBJECT]];
-    boardSubjectsObject[boardSubject] = true;
-  }
-
-  boardLevelsObject = {};
-  for (var j = 0; j < uniqueLevelRows.length; j++) {
-    var boardLevel = uniqueLevelRows[j][SYLLABUS_COLUMNS[LEVEL]];
-    boardLevelsObject[boardLevel] = true;
+    var levelsForSubject = getLevelsIndexObjectForSubject(boardSubject, boardLessons);
+    boardSubjectsObject[boardSubject] = levelsForSubject;
   }
 
   board[SUBJECTS] = boardSubjectsObject;
-  board[LEVELS] = boardLevelsObject;
 
+}
+
+function getLevelsIndexObjectForSubject(boardSubject, boardLessons) {
+  var lessonsForSubject = ArrayLib.filterByText(boardLessons, SYLLABUS_COLUMNS[SUBJECT], boardSubject);
+  var uniqueLevelRowsForSubject = ArrayLib.unique(lessonsForSubject, SYLLABUS_COLUMNS[LEVEL]);
+
+  levelsIndexObject = {};
+  for (var i = 0; i < uniqueLevelRowsForSubject.length; i++) {
+    var level = uniqueLevelRowsForSubject[i][SYLLABUS_COLUMNS[LEVEL]];
+    levelsIndexObject[level] = true;
+  }
+
+  return levelsIndexObject;
 }
 
 function generateBoardIdFromRow(row) {
