@@ -13,34 +13,26 @@ function writeTopicsToFirebaseForLanguage(languageCode, topicsData, subjectsData
   // Sort the table by name for this language, only add for rows where name column isn't empty.
   var sortedData = ArrayLib.sort(topicsData, columnForLanguageName, false); // false => descending
 
-  // Put topics as children of their subject
-  var topicsBySubject = {};
-  for (var i = 0; i < subjectsData.length; i++) {
-    var subjectId = subjectsData[i][SUBJECTS_COLUMNS[ID]];
-    var topics = {};
-    
-    topicsWithSubject = ArrayLib.filterByText(sortedData, TOPICS_COLUMNS[SUBJECT], subjectId);
-
-    var currentRow = 0;
-    var row = topicsWithSubject[currentRow];
-    while (row && row[TOPICS_COLUMNS[NAMES][languageCode]]) {
-    
-      var id = row[TOPICS_COLUMNS[ID]];
-      var name = row[TOPICS_COLUMNS[NAMES][languageCode]];
-      var subject = row[TOPICS_COLUMNS[SUBJECT]];
-    
-      var topicObject = {};
-      topicObject[NAME] = name;
-      topicObject[SUBJECT] = subject;
-    
-      topics[id] = topicObject;
+  var topics = {};
+  var currentRow = 0;
+  var row = sortedData[currentRow];
+  while (row && row[TOPICS_COLUMNS[NAMES][languageCode]]) {
+  
+    var id = row[TOPICS_COLUMNS[ID]];
+    var name = row[TOPICS_COLUMNS[NAMES][languageCode]];
+    var subject = row[TOPICS_COLUMNS[SUBJECT]];
+  
+    var topicObject = {};
+    topicObject[NAME] = name;
+    topicObject[SUBJECT] = subject;
+  
+    topics[id] = topicObject;
       
-      currentRow++;
-      row = topicsWithSubject[currentRow];
-    }
-    topicsBySubject[subjectId] = topics;
+    currentRow++;
+    row = sortedData[currentRow];
   }
-  base.setData(languageCode + "/topics", topicsBySubject);
+
+  base.setData(languageCode + "/topics", topics);
 }
 
 function generateTopicIdFromRow(row) {
