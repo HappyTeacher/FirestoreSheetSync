@@ -1,3 +1,8 @@
+
+// Create a JSON object from a row given its columnObject
+//	(an object of keys whose values are column numbers where
+//	the value of that key should go in the created object).
+//	Return this object and the ID in a payload object.
 function getIdAndObjectFromRow(row, columnObject, languageCode) {
 	var id = row[columnObject[ID]];
 
@@ -27,6 +32,7 @@ function getIdAndObjectFromRow(row, columnObject, languageCode) {
 	return payload;
 }
 
+// Sort data so that rows with a name for the given language appear first.
 function getDataSortedByLanguage(data, columnObject, languageCode) {
 	var columnForLanguageName = columnObject[NAME][languageCode];
 	if (!columnForLanguageName) {
