@@ -23,13 +23,19 @@ function writeSubjectsToFirebaseForLanguage(languageCode, subjectsData) {
 
     var parent = row[SUBJECTS_COLUMNS[PARENT_SUBJECT]];
     var hasChildren = subjectHasChildrenMap[subjectId];
+
+    Logger.log(subjectId);
+    Logger.log(subjectHasChildrenMap);
     
     subjectObject[HAS_CHILDREN] = hasChildren;
 
     if (parent) {
       subjectObject[PARENT_SUBJECT] = parent;
       subjectHasChildrenMap[parent] = true;
-      subjectsObject[parent][HAS_CHILDREN] = true;
+
+      if (subjectsObject[parent]) {
+        subjectsObject[parent][HAS_CHILDREN] = true;
+      }
     }
 
     subjectsObject[subjectId] = subjectObject;
