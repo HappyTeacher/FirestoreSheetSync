@@ -27,6 +27,15 @@ function getIdAndObjectFromRow(row, columnObject, languageCode) {
 	return payload;
 }
 
+function getDataSortedByLanguage(data, columnObject, languageCode) {
+	var columnForLanguageName = columnObject[NAME][languageCode];
+	if (!columnForLanguageName) {
+		throw new Error("The language " + languageCode + " does not have a NAME column assigned. Operation cancelled.");
+	}
+
+	return ArrayLib.sort(data, columnForLanguageName, false); // false => descending
+}
+
 function writeIds(sheet, idColumn, idGenerator) {
   var data = sheet.getDataRange().getValues();
   for (var i = 1; i < data.length; i++) {

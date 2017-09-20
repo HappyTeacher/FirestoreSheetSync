@@ -4,13 +4,7 @@ function writeSyllabusLessonIds(syllabusLessonSheet) {
 
 function writeSyllabusLessonsToFirebaseForLanguage(languageCode, syllabusLessonData, boardData, pairData) {
   var base = FirebaseApp.getDatabaseByUrl(FIREBASE_URL, SECRET);
-  
-  var columnForLanguageName = SYLLABUS_COLUMNS[NAME][languageCode];
-  if (!columnForLanguageName) {
-    throw new Error("The language " + languageCode + " does not have a NAME column assigned. Operation cancelled.");
-  }
-
-  var sortedData = ArrayLib.sort(syllabusLessonData, columnForLanguageName, false); // false => descending
+  var sortedData = getDataSortedByLanguage(syllabusLessonData, SYLLABUS_COLUMNS, languageCode);
   
   var lessonsByBoard = {};
   for (var i = 0; i < boardData.length; i++) {

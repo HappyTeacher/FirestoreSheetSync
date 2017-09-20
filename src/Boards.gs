@@ -3,12 +3,7 @@ function writeBoardIds(boardSheet) {
 }
 
 function writeBoardsToFirebaseForLanguage(languageCode, data, syllabusLessonData) {
-  var columnForLanguageName = BOARDS_COLUMNS[NAME][languageCode];
-  if (!columnForLanguageName) {
-    throw new Error("The language " + languageCode + " does not have a NAME column assigned. Operation cancelled.");
-  }
-
-  var sortedData = ArrayLib.sort(data, columnForLanguageName, false); // false => descending
+  var sortedData = getDataSortedByLanguage(data, BOARDS_COLUMNS, languageCode);
 
   // Create new JSON object to import!
   var boards = {};
