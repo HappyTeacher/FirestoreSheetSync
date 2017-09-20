@@ -3,7 +3,7 @@ function writeBoardIds(boardSheet) {
 }
 
 function writeBoardsToFirebaseForLanguage(languageCode, data, syllabusLessonData) {
-  var columnForLanguageName = BOARDS_COLUMNS[NAMES][languageCode];
+  var columnForLanguageName = BOARDS_COLUMNS[NAME][languageCode];
   if (!columnForLanguageName) {
     throw new Error("The language " + languageCode + " does not have a NAME column assigned. Operation cancelled.");
   }
@@ -15,12 +15,10 @@ function writeBoardsToFirebaseForLanguage(languageCode, data, syllabusLessonData
 
   var currentRow = 0;
   var row = sortedData[currentRow];
-  while (row && row[BOARDS_COLUMNS[NAMES][languageCode]]) {
-    var boardId = row[BOARDS_COLUMNS[ID]];
-    
-    var board = {};
-    board[NAME] = row[BOARDS_COLUMNS[NAMES][languageCode]];
-    
+  while (row && row[BOARDS_COLUMNS[NAME][languageCode]]) {
+    var idAndObject = getIdAndObjectFromRow(row, BOARDS_COLUMNS, languageCode);
+    var boardId = idAndObject[ID];
+    var board = idAndObject[OBJECT];
     boards[boardId] = board;
 
     addBoardSubjectsAndLevelsToBoard(board, boardId, syllabusLessonData);
@@ -63,6 +61,6 @@ function getLevelsIndexObjectForSubject(boardSubject, boardLessons) {
 }
 
 function generateBoardIdFromRow(row) {
-  var boardTitleEnglish = row[BOARDS_COLUMNS[NAMES][ENGLISH_LOCALE]];
+  var boardTitleEnglish = row[BOARDS_COLUMNS[NAME][ENGLISH_LOCALE]];
   return boardTitleEnglish.toLowerCase();
 }

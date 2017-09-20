@@ -1,3 +1,27 @@
+function getIdAndObjectFromRow(row, columnObject, languageCode) {
+	var id = row[columnObject[ID]];
+	var keys = columnObject[KEYS];
+	var object = {};
+	for (var i = 0; i < keys.length; i++) {
+		var key = keys[i];
+		var column;
+
+		if (key == NAME) {
+			column = columnObject[key][languageCode];
+		} else {
+			column = columnObject[key];
+		}
+
+		object[key] = row[column];
+	}
+
+	var payload = {};
+	payload[ID] = id;
+	payload[OBJECT] = object;
+
+	return payload;
+}
+
 function writeIds(sheet, idColumn, idGenerator) {
   var data = sheet.getDataRange().getValues();
   for (var i = 1; i < data.length; i++) {
