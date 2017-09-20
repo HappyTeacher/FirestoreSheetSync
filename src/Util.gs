@@ -1,5 +1,10 @@
 function getIdAndObjectFromRow(row, columnObject, languageCode) {
 	var id = row[columnObject[ID]];
+
+	if (!id) {
+		throw new Error("The following row is missing an ID. Row:" + row);
+	}
+
 	var keys = columnObject[KEYS];
 	var object = {};
 	for (var i = 0; i < keys.length; i++) {

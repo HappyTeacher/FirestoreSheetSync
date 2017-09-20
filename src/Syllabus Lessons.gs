@@ -5,7 +5,7 @@ function writeSyllabusLessonIds(syllabusLessonSheet) {
 function writeSyllabusLessonsToFirebaseForLanguage(languageCode, syllabusLessonData, boardData, pairData) {
   var base = FirebaseApp.getDatabaseByUrl(FIREBASE_URL, SECRET);
   
-  var columnForLanguageName = SYLLABUS_COLUMNS[NAMES][languageCode];
+  var columnForLanguageName = SYLLABUS_COLUMNS[NAME][languageCode];
   if (!columnForLanguageName) {
     throw new Error("The language " + languageCode + " does not have a NAME column assigned. Operation cancelled.");
   }
@@ -13,11 +13,8 @@ function writeSyllabusLessonsToFirebaseForLanguage(languageCode, syllabusLessonD
   var sortedData = ArrayLib.sort(syllabusLessonData, columnForLanguageName, false); // false => descending
   
   var lessonsByBoard = {};
-  Logger.log(boardData);
   for (var i = 0; i < boardData.length; i++) {
     var boardId = boardData[i][BOARDS_COLUMNS[ID]];
-
-    if (!boardId) { return; }
 
     var lessonsForBoard = ArrayLib.filterByText(sortedData, SYLLABUS_COLUMNS[BOARD], boardId);
      
@@ -25,24 +22,13 @@ function writeSyllabusLessonsToFirebaseForLanguage(languageCode, syllabusLessonD
     // Iterate over syllabus lesson IDs:
     var currentLessonRow = 0;
     var lessonRow = lessonsForBoard[currentLessonRow];
-    while (lessonRow && lessonRow[SYLLABUS_COLUMNS[NAMES][languageCode]]) {
-      var lessonObject = {};
+    while (lessonRow && lessonRow[SYLLABUS_COLUMNS[NAME][languageCode]]) {
+      var idAndObject = getIdAndObjectFromRow(lessonRow, SYLLABUS_COLUMNS, languageCode);
+      var lessonId = idAndObject[ID];
+      var lessonObject = idAndObject[OBJECT];
             
-      var subject = lessonRow[SYLLABUS_COLUMNS[SUBJECT]];
-      var level = lessonRow[SYLLABUS_COLUMNS[LEVEL]];
-      var name = lessonRow[SYLLABUS_COLUMNS[NAMES][languageCode]];
-
-      lessonObject[NAME] = name;
-      lessonObject[LEVEL] = level;
-      lessonObject[SUBJECT] = subject;
-      lessonObject[BOARD] = lessonRow[SYLLABUS_COLUMNS[BOARD]];
-      lessonObject[LESSON_NUMBER] = lessonRow[SYLLABUS_COLUMNS[LESSON_NUMBER]];
-      
-      var lessonId = lessonRow[SYLLABUS_COLUMNS[ID]];
-
-      if (!lessonId) {
-        throw new Error("No ID specified for this syllabus lesson plan. Make sure all rows have an ID defined.");
-      }
+      var subject = lessonObject[SUBJECT];
+      var level = lessonObject[LEVEL];
 
       addTopicPairsAndCountToLesson(lessonObject, lessonId, pairData);
       
@@ -59,7 +45,6 @@ function writeSyllabusLessonsToFirebaseForLanguage(languageCode, syllabusLessonD
       currentLessonRow++;
       lessonRow = lessonsForBoard[currentLessonRow];
     }
-    Logger.log(boardId);
     lessonsByBoard[boardId] = boardLessonsObject;
   }
   base.setData(languageCode + "/syllabusLessons", lessonsByBoard);
@@ -84,7 +69,7 @@ function generateSyllabusLessonIdFromRow(row) {
   var board = row[SYLLABUS_COLUMNS[BOARD]];
   var level = row[SYLLABUS_COLUMNS[LEVEL]];
   var subject = row[SYLLABUS_COLUMNS[SUBJECT]];
-  var lessonNameEnglish = row[SYLLABUS_COLUMNS[NAMES][ENGLISH_LOCALE]];
+  var lessonNameEnglish = row[SYLLABUS_COLUMNS[NAME][ENGLISH_LOCALE]];
 
   return (board + ID_DIV + level + ID_DIV + subject + ID_DIV + lessonNameEnglish).toLowerCase();
 }
