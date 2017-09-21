@@ -6,7 +6,7 @@ function writeSubtopicIds(subtopicsSheet) {
   writeIds(subtopicsSheet, SUBTOPICS_COLUMNS[ID], generateSubtopicIdFromRow);
 }
 
-function writeTopicsToFirebaseForLanguage(languageCode, topicsData, subjectsData, subtopicsData, subtopicBoardLevelData) {
+function writeTopicsToFirebaseForLanguage(languageCode, topicsData, subjectsData, subtopicsData) {
   var base = FirebaseApp.getDatabaseByUrl(FIREBASE_URL, SECRET);
 
   var sortedData = getDataSortedByLanguage(topicsData, TOPICS_COLUMNS, languageCode);
@@ -31,7 +31,7 @@ function writeTopicsToFirebaseForLanguage(languageCode, topicsData, subjectsData
   base.setData(languageCode + "/topics", topics);
 }
 
-function writeSubtopicsToFirebaseForLanguage(topicId, languageCode, subtopicsData, subtopicBoardLevelData) {
+function writeSubtopicsToFirebaseForLanguage(topicId, languageCode, subtopicsData) {
   var base = FirebaseApp.getDatabaseByUrl(FIREBASE_URL, SECRET);
   var topicSubtopics = ArrayLib.filterByText(subtopicsData, SUBTOPICS_COLUMNS[TOPIC], topicId);
   var sortedData = getDataSortedByLanguage(topicSubtopics, SUBTOPICS_COLUMNS, languageCode);
@@ -45,8 +45,6 @@ function writeSubtopicsToFirebaseForLanguage(topicId, languageCode, subtopicsDat
     var idAndObject = getIdAndObjectFromRow(row, SUBTOPICS_COLUMNS, languageCode);
     var subtopicId = idAndObject[ID];
     var subtopicObject = idAndObject[OBJECT];
-
-    addBoardLevelDataToSubtopicObject(subtopicObject, subtopicId, subtopicBoardLevelData);
   
     subtopics[subtopicId] = subtopicObject;
       
@@ -55,21 +53,6 @@ function writeSubtopicsToFirebaseForLanguage(topicId, languageCode, subtopicsDat
   }
 
   base.setData(languageCode + "/subtopics/" + topicId, subtopics);
-}
-
-function addBoardLevelDataToSubtopicObject(subtopicObject, subtopicId, subtopicBoardLevelData) {
-  var boardLevelsForSubtopic = ArrayLib.filterByText(subtopicBoardLevelData, SUBTOPIC_BOARD_LEVEL_COLUMNS[SUBTOPIC], subtopicId);
-
-  var levelsByBoard = {};
-  for (var i = 0; i < boardLevelsForSubtopic.length; i++) {
-    var row = boardLevelsForSubtopic[i];
-    var level = row[SUBTOPIC_BOARD_LEVEL_COLUMNS[LEVEL]];
-    var board = row[SUBTOPIC_BOARD_LEVEL_COLUMNS[BOARD]];
-
-    levelsByBoard[board] = level;
-  }
-
-  subtopicObject[BOARD_LEVELS] = levelsByBoard;
 }
 
 function generateTopicIdFromRow(row) {
@@ -99,30 +82,30 @@ function writeSubtopicSubmissionsToFirebaseForLanguage(languageCode, submissions
   for (var i = 0; i < submissionsData.length; i++) {
     var row = submissionsData[i];
 
-    var idAndObject = getIdAndObjectFromRow(row, SUBTOPICS_DUMMY_SUBMISSIONS_COLUMN, languageCode);
+    var idAndObject = getIdAndObjectFromRow(row, SUBTOPICS_DUMMY_SUBMISSIONS_COLUMNS, languageCode);
     var submissionId = idAndObject[ID];
     var submissionObject = idAndObject[OBJECT];
 
-    var subtopic = submissionObject[SUBTOPIC];
-    var topic = submissionObject[SUBTOPIC][TOPIC];
+    var subtopic = row[SUBTOPICS_DUMMY_SUBMISSIONS_COLUMNS[SUBTOPIC]];
+    var topic = row[SUBTOPICS_DUMMY_SUBMISSIONS_COLUMNS[TOPIC]];
   
-    if (!submissions[TOPIC]) {
-      submissions[TOPIC] = {};
+    if (!submissions[topic]) {
+      submissions[topic] = {};
     }
 
-    submissions[TOPIC][SUBTOPIC] = submissionObject;
+    submissions[topic][subtopic] = submissionObject;
   }
 
-  base.setData(languageCode + "/subtopics_submissions/", submissions);
+  base.setData(languageCode + "/subtopic_lesson_headers/", submissions);
 }
 
 function generateSubtopicSubmissionIdFromRow(row) {
-  var subtopic = row[SUBTOPICS_DUMMY_SUBMISSIONS_COLUMN[SUBTOPIC]];
-  var author = row[SUBTOPICS_DUMMY_SUBMISSIONS_COLUMN[AUTHOR_NAME]];
-  var institution = row[SUBTOPICS_DUMMY_SUBMISSIONS_COLUMN[AUTHOR_INSTITUTION]];
+  var subtopic = row[SUBTOPICS_DUMMY_SUBMISSIONS_COLUMNS[SUBTOPIC]];
+  var author = row[SUBTOPICS_DUMMY_SUBMISSIONS_COLUMNS[AUTHOR_NAME]];
+  var institution = row[SUBTOPICS_DUMMY_SUBMISSIONS_COLUMNS[AUTHOR_INSTITUTION]];
   return (subtopic + ID_DIV + author + ID_DIV + institution).toLowerCase();
 }
 
 function writeSubtopicSubmissionIds(submissionsSheet) {
-  writeIds(submissionsSheet, SUBTOPICS_DUMMY_SUBMISSIONS_COLUMN[ID], generateSubtopicSubmissionIdFromRow);
+  writeIds(submissionsSheet, SUBTOPICS_DUMMY_SUBMISSIONS_COLUMNS[ID], generateSubtopicSubmissionIdFromRow);
 }

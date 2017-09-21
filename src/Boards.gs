@@ -2,7 +2,7 @@ function writeBoardIds(boardSheet) {
   writeIds(boardSheet, BOARDS_COLUMNS[ID], generateBoardIdFromRow);
 }
 
-function writeBoardsToFirebaseForLanguage(languageCode, data, syllabusLessonData) {
+function writeBoardsToFirebaseForLanguage(languageCode, data, syllabusLessonData, subtopicBoardLevelData) {
   var sortedData = getDataSortedByLanguage(data, BOARDS_COLUMNS, languageCode);
 
   // Create new JSON object to import!
@@ -14,9 +14,11 @@ function writeBoardsToFirebaseForLanguage(languageCode, data, syllabusLessonData
     var idAndObject = getIdAndObjectFromRow(row, BOARDS_COLUMNS, languageCode);
     var boardId = idAndObject[ID];
     var board = idAndObject[OBJECT];
-    boards[boardId] = board;
+
+    board[LEVEL_TOPICS] = getSubtopicLevelsIndexObjectForBoard(boardId, subtopicBoardLevelData);
 
     addBoardSubjectsAndLevelsToBoard(board, boardId, syllabusLessonData);
+    boards[boardId] = board;
 
     currentRow++;
     row = sortedData[currentRow];
@@ -53,6 +55,25 @@ function getLevelsIndexObjectForSubject(boardSubject, boardLessons) {
   }
 
   return levelsIndexObject;
+}
+
+function getSubtopicLevelsIndexObjectForBoard(boardId, subtopicBoardLevelData) {
+  var subtopicLevelsForBoard = ArrayLib.filterByText(subtopicBoardLevelData, SUBTOPIC_BOARD_LEVEL_COLUMNS[BOARD], boardId);
+
+  var indexListByLevel = {};
+  for (var i = 0; i < subtopicLevelsForBoard.length; i++) {
+    var row = subtopicLevelsForBoard[i];
+    var level = row[SUBTOPIC_BOARD_LEVEL_COLUMNS[LEVEL]];
+    var subtopic = row[SUBTOPIC_BOARD_LEVEL_COLUMNS[SUBTOPIC]];
+
+    if (!indexListByLevel[level]) {
+      indexListByLevel[level] = {};
+    }
+
+    indexListByLevel[level][subtopic] = true;
+  }
+
+  return indexListByLevel;
 }
 
 function generateBoardIdFromRow(row) {
