@@ -22,7 +22,7 @@ function writeTopicsToFirebaseForLanguage(languageCode, topicsData, subjectsData
     topics[topicId] = topicObject;
 
     // Now write subtopics for this topic:
-    writeSubtopicsToFirebaseForLanguage(topicId, languageCode, subtopicsData, subtopicBoardLevelData);
+    writeSubtopicsToFirebaseForLanguage(topicId, languageCode, subtopicsData);
       
     currentRow++;
     row = sortedData[currentRow];
@@ -69,8 +69,9 @@ function generateSubtopicIdFromRow(row) {
 }
 
 function generateSubtopicIdFromRow(row) {
+  var topic = row[SUBTOPICS_COLUMNS[TOPIC]];
   var name = row[SUBTOPICS_COLUMNS[NAME][ENGLISH_LOCALE]];
-  return name.toLowerCase();
+  return (topic + ID_DIV + name).toLowerCase();
 }
 
 // The below functions are just for dummy data in the spreadsheet. Not for production!
