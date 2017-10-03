@@ -41,7 +41,7 @@ function writeSyllabusLessonsToFirebaseForLanguage(languageCode, syllabusLessonD
     }
     lessonsByBoard[boardId] = boardLessonsObject;
   }
-  base.setData(languageCode + "/syllabusLessons", lessonsByBoard);
+  base.setData(languageCode + "/syllabus_lessons", lessonsByBoard);
 }
 
 function addTopicPairsAndCountToLesson(lessonObject, syllabusLessonId, pairData) {

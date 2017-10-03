@@ -25,7 +25,7 @@ var AUTHOR_INSTITUTION = "authorInstitution";
 var AUTHOR_LOCATION = "authorLocation";
 var SUBTOPIC = "subtopic";
 var BOARD_LEVELS = "boardLevels";
-var LEVEL_TOPICS = "level_topics";
+var LEVEL_SUBTOPICS = "level_subtopics";
 
 //// Sheet: Boards
 var BOARDS_COLUMNS = {};

@@ -15,7 +15,7 @@ function writeBoardsToFirebaseForLanguage(languageCode, data, syllabusLessonData
     var boardId = idAndObject[ID];
     var board = idAndObject[OBJECT];
 
-    board[LEVEL_TOPICS] = getSubtopicLevelsIndexObjectForBoard(boardId, subtopicBoardLevelData);
+    board[LEVEL_SUBTOPICS] = getSubtopicLevelsIndexObjectForBoard(boardId, subtopicBoardLevelData);
 
     addBoardSubjectsAndLevelsToBoard(board, boardId, syllabusLessonData);
     boards[boardId] = board;
