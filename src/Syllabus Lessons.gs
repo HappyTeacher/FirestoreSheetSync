@@ -24,7 +24,7 @@ function writeSyllabusLessonsToFirebaseForLanguage(languageCode, syllabusLessonD
       var subject = lessonObject[SUBJECT];
       var level = lessonObject[LEVEL];
 
-      addTopicPairsAndCountToLesson(lessonObject, lessonId, pairData);
+      addTopicPairsToLesson(lessonObject, lessonId, pairData);
       
       if (!boardLessonsObject[subject]) {
         boardLessonsObject[subject] = {};
@@ -44,7 +44,7 @@ function writeSyllabusLessonsToFirebaseForLanguage(languageCode, syllabusLessonD
   base.setData(languageCode + "/syllabus_lessons", lessonsByBoard);
 }
 
-function addTopicPairsAndCountToLesson(lessonObject, syllabusLessonId, pairData) {
+function addTopicPairsToLesson(lessonObject, syllabusLessonId, pairData) {
   // Find pairs for this lesson ID:
   var topicsForLesson = ArrayLib.filterByText(pairData, PAIR_COLUMNS[LESSON], syllabusLessonId);
     
@@ -56,7 +56,6 @@ function addTopicPairsAndCountToLesson(lessonObject, syllabusLessonId, pairData)
   }
 
   lessonObject[TOPICS] = associatedTopicsObject;
-  lessonObject[TOPIC_COUNT] = topicsForLesson.length;
 }
 
 function generateSyllabusLessonIdFromRow(row) {
