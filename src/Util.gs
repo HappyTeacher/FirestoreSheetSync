@@ -75,3 +75,29 @@ function forRowsWithLanguageName(data, columnObject, languageCode, loopFunction)
         row = sortedData[currentRow];
     }
 }
+
+/**
+ * Filter a 2D array into a 2D array where the given column equals
+ *  the given value.
+ *
+ *  (This is a replacement helper function of the filterByText function
+ *   in the ArrayLib library. The ArrayLib version of the function does
+ *   not do an exact match, but rather checks if the element at the column
+ *   contains the value).
+ *
+ * @param data the 2D array
+ * @param column the column of the value to check
+ * @param value the value to check
+ * @returns {Array} the filtered array
+ */
+function filterExactByText(data, column, value) {
+    filteredArray = [];
+    for (var i = 0; i < data.length; i++) {
+        var row = data[i];
+        if (row[column] === value) {
+            filteredArray.push(row);
+        }
+    }
+
+    return filteredArray;
+}

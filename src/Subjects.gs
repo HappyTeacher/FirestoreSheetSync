@@ -52,7 +52,7 @@ function getSubjectById(languageCode, subjectsData, syllabusLessonData) {
 }
 
 function addBoardDataToSubject(subjectId, subject, syllabusLessonData, languageCode) {
-    var syllabusLessonsForSubject = ArrayLib.filterByText(syllabusLessonData, SYLLABUS_COLUMNS[SUBJECT], subjectId);
+    var syllabusLessonsForSubject = filterExactByText(syllabusLessonData, SYLLABUS_COLUMNS[SUBJECT], subjectId);
 
     var boardsObject = {};
     var boardStandardsObject = {};
@@ -73,7 +73,7 @@ function addBoardDataToSubject(subjectId, subject, syllabusLessonData, languageC
 }
 
 function getBoardStandards(boardId, syllabusLessonData, languageCode) {
-    var syllabusLessonsForBoard = ArrayLib.filterByText(syllabusLessonData, SYLLABUS_COLUMNS[BOARD], boardId);
+    var syllabusLessonsForBoard = filterExactByText(syllabusLessonData, SYLLABUS_COLUMNS[BOARD], boardId);
 
     // Keep a "set" (standard -> true) of all standards encountered in the loop
     var standardsSet = {};
