@@ -16,7 +16,7 @@ function getIdAndObjectFromRow(row, columnObject, languageCode) {
 		var key = keys[i];
 		var column;
 
-		if (key == NAME && columnObject[key][languageCode]) {
+		if (key === NAME && columnObject[key][languageCode]) {
 			column = columnObject[key][languageCode];
 		} else {
 			column = columnObject[key];
