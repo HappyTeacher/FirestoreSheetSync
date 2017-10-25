@@ -15,7 +15,7 @@ function writeBoardsToFirestoreForLanguage(languageCode, data, syllabusLessonDat
         var board = idAndObject[OBJECT];
 
         var path = "localized/" + languageCode + "/boards/" + boardId;
-        var response = FirestoreApp.updateDocument(path, board, email, key, projectId);
+        FirestoreApp.updateDocument(path, board, email, key, projectId);
 
         currentRow++;
         row = sortedData[currentRow];
