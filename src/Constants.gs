@@ -107,4 +107,4 @@ var LEVELS_COLUMNS = {};
 LEVELS_COLUMNS[NUMBER] = 0;
 
 //// Other:
-var ID_DIV = " ~ ";
+var ID_DIV = " ^ ";
