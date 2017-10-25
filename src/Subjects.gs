@@ -18,8 +18,6 @@ function writeSubjectsToFirestoreForLanguage(languageCode, subjectsData, syllabu
 }
 
 function getSubjectById(languageCode, subjectsData, syllabusLessonData) {
-    var sortedData = getDataSortedByLanguage(subjectsData, SUBJECTS_COLUMNS, languageCode);
-
     var subjectsById = {};
 
     // Keep track of whether a parent subject has children (for
@@ -27,7 +25,7 @@ function getSubjectById(languageCode, subjectsData, syllabusLessonData) {
     //  the loop in case a child is encountered before parent.
     var subjectHasChildrenMap = {};
 
-    forRowsWithLanguageName(sortedData, SUBJECTS_COLUMNS[NAME][languageCode], function(row){
+    forRowsWithLanguageName(subjectsData, SUBJECTS_COLUMNS, languageCode, function(row){
         var idAndObject = getIdAndObjectFromRow(row, SUBJECTS_COLUMNS, languageCode);
         var subjectId = idAndObject[ID];
         var subjectObject = idAndObject[OBJECT];
@@ -46,49 +44,53 @@ function getSubjectById(languageCode, subjectsData, syllabusLessonData) {
             subjectObject[PARENT_SUBJECT] = null;
         }
 
-        addBoardDataToSubject(subjectId, subjectObject, syllabusLessonData);
+        addBoardDataToSubject(subjectId, subjectObject, syllabusLessonData, languageCode);
         subjectsById[subjectId] = subjectObject;
     });
 
     return subjectsById;
 }
 
-function addBoardDataToSubject(subjectId, subject, syllabusLessonData) {
-    // NOTE: This ignores language. Will show same standards/board for lessons in all languages.
-
+function addBoardDataToSubject(subjectId, subject, syllabusLessonData, languageCode) {
     var syllabusLessonsForSubject = ArrayLib.filterByText(syllabusLessonData, SYLLABUS_COLUMNS[SUBJECT], subjectId);
-    var uniqueBoards = ArrayLib.unique(syllabusLessonsForSubject, SYLLABUS_COLUMNS[BOARD]);
 
     var boardsObject = {};
     var boardStandardsObject = {};
 
-    for (var i = 0; i < uniqueBoards.length; i++) {
-        var row = uniqueBoards[i];
+    forRowsWithLanguageName(syllabusLessonsForSubject, SYLLABUS_COLUMNS, languageCode, function(row) {
         var boardId = row[SYLLABUS_COLUMNS[BOARD]];
-        var boardStandards = getBoardStandards(boardId, syllabusLessonData);
 
-        boardsObject[boardId] = true;
-        boardStandardsObject[boardId] = boardStandards;
-    }
+        if (!boardsObject[boardId]) {
+            var boardStandardsForSubject = getBoardStandards(boardId, syllabusLessonsForSubject, languageCode);
 
-    subject["boardStandards"] = boardStandardsObject;
+            boardsObject[boardId] = true;
+            boardStandardsObject[boardId] = boardStandardsForSubject;
+        }
+    });
+
     subject["boards"] = boardsObject;
+    subject["boardStandards"] = boardStandardsObject;
 }
 
-function getBoardStandards(boardId, syllabusLessonData) {
+function getBoardStandards(boardId, syllabusLessonData, languageCode) {
     var syllabusLessonsForBoard = ArrayLib.filterByText(syllabusLessonData, SYLLABUS_COLUMNS[BOARD], boardId);
-    var uniqueStandards = ArrayLib.unique(syllabusLessonsForBoard, SYLLABUS_COLUMNS[LEVEL]);
 
+    // Keep a "set" (standard -> true) of all standards encountered in the loop
+    var standardsSet = {};
     var standards = [];
-    for (var i = 0; i < uniqueStandards.length; i++) {
-        var row = uniqueStandards[i];
+
+    forRowsWithLanguageName(syllabusLessonsForBoard, SYLLABUS_COLUMNS, languageCode, function(row) {
         var standard = row[SYLLABUS_COLUMNS[LEVEL]];
 
-        standards.push(standard)
-    }
+        if (!standardsSet[standard]) {
+            standards.push(standard);
+            standardsSet[standard] = true;
+        }
+
+    });
 
     // Sort ascending
-    return standards.sort(function(a, b){return a-b});
+    return standards.sort(function(a, b){return a-b});;
 }
 
 function generateSubjectIdFromRow(row) {

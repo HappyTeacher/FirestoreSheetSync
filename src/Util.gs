@@ -63,13 +63,15 @@ function writeIdAtRowNumber(rowNumber, sheet, data, idColumn, idGenerator) {
  * 	is empty. At each iteration, run the loopFunction, which can take
  * 	a row array as a parameter.
  */
-function forRowsWithLanguageName(data, nameColumn, loopFunction) {
-    var currentRow = 0;
-    var row = data[currentRow];
+function forRowsWithLanguageName(data, columnObject, languageCode, loopFunction) {
+    var sortedData = getDataSortedByLanguage(data, columnObject, languageCode);
 
-    while (row && row[nameColumn]) {
+    var currentRow = 0;
+    var row = sortedData[currentRow];
+
+    while (row && row[columnObject[NAME][languageCode]]) {
         loopFunction(row);
         currentRow++;
-        row = data[currentRow];
+        row = sortedData[currentRow];
     }
 }

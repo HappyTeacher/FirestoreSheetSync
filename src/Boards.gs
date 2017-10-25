@@ -5,7 +5,7 @@ function writeBoardIds(boardSheet) {
 function writeBoardsToFirestoreForLanguage(languageCode, data, syllabusLessonData, subtopicBoardLevelData) {
     var sortedData = getDataSortedByLanguage(data, BOARDS_COLUMNS, languageCode);
 
-    forRowsWithLanguageName(sortedData, BOARDS_COLUMNS[NAME][languageCode], function(row){
+    forRowsWithLanguageName(sortedData, BOARDS_COLUMNS, languageCode, function(row){
         var idAndObject = getIdAndObjectFromRow(row, BOARDS_COLUMNS, languageCode);
         var boardId = idAndObject[ID];
         var board = idAndObject[OBJECT];
