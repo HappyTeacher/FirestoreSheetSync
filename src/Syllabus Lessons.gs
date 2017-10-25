@@ -3,9 +3,7 @@ function writeSyllabusLessonIds(syllabusLessonSheet) {
 }
 
 function writeSyllabusLessonsToFirestoreForLanguage(languageCode, syllabusLessonData, boardData, pairData) {
-    var sortedData = getDataSortedByLanguage(syllabusLessonData, SYLLABUS_COLUMNS, languageCode);
-
-    forRowsWithLanguageName(syllabusLessonData, SYLLABUS_COLUMNS, languageCode, function (row) {
+    forRowsWithLanguageName(syllabusLessonData, SYLLABUS_COLUMNS, languageCode, function(row) {
         var idAndObject = getIdAndObjectFromRow(row, SYLLABUS_COLUMNS, languageCode);
         var lessonId = idAndObject[ID];
         var lessonObject = idAndObject[OBJECT];
