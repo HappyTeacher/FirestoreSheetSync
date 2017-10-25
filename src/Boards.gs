@@ -2,7 +2,7 @@ function writeBoardIds(boardSheet) {
   writeIds(boardSheet, BOARDS_COLUMNS[ID], generateBoardIdFromRow);
 }
 
-function writeBoardsToFirestoreForLanguage(languageCode, data, syllabusLessonData, subtopicBoardLevelData) {
+function writeBoardsToFirestoreForLanguage(languageCode, data) {
     var sortedData = getDataSortedByLanguage(data, BOARDS_COLUMNS, languageCode);
 
     forRowsWithLanguageName(sortedData, BOARDS_COLUMNS, languageCode, function(row){
