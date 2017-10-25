@@ -29,8 +29,6 @@ function writeSubtopicsToTopic(topicPath, topicId, languageCode, subtopicsData, 
         var subtopicId = idAndObject[ID];
         var subtopicObject = idAndObject[OBJECT];
 
-        subtopicObject[SYLLABUS_LESSONS] = getAssociatedSyllabusLessonsForSubtopic(subtopicId, boardLessonTopicPairData)
-
         var subtopicPath = topicPath + "/subtopics/" + subtopicId;
         FirestoreApp.updateDocument(subtopicPath, subtopicObject, email, key, projectId);
     });
@@ -38,10 +36,6 @@ function writeSubtopicsToTopic(topicPath, topicId, languageCode, subtopicsData, 
 
 function getAssociatedSyllabusLessonsForTopic(topicId, boardLessonTopicPairData) {
     return getAssociatedLessonsForColumn(topicId, BOARDLESSON_TOPIC_PAIR_COLUMNS[TOPIC], boardLessonTopicPairData);
-}
-
-function getAssociatedSyllabusLessonsForSubtopic(subtopicId, boardLessonTopicPairData) {
-    return getAssociatedLessonsForColumn(subtopicId, BOARDLESSON_TOPIC_PAIR_COLUMNS[SUBTOPIC], boardLessonTopicPairData);
 }
 
 function getAssociatedLessonsForColumn(id, columnNumber, boardLessonTopicPairData) {
