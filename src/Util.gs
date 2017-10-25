@@ -57,3 +57,19 @@ function writeIdAtRowNumber(rowNumber, sheet, data, idColumn, idGenerator) {
 	idCell.setValue(id);
 	idCell.setBackground("green");
 }
+
+/**
+ * Iterate over the given data until the data at column nameColumn
+ * 	is empty. At each iteration, run the loopFunction, which can take
+ * 	a row array as a parameter.
+ */
+function forRowsWithLanguageName(data, nameColumn, loopFunction) {
+    var currentRow = 0;
+    var row = data[currentRow];
+
+    while (row && row[nameColumn]) {
+        loopFunction(row);
+        currentRow++;
+        row = data[currentRow];
+    }
+}

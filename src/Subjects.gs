@@ -12,9 +12,7 @@ function writeSubjectsToFirestoreForLanguage(languageCode, subjectsData, syllabu
 
         var path = "localized/" + languageCode + "/subjects/" + id;
 
-        Logger.log(path);
-        Logger.log(subject);
-        Logger.log(FirestoreApp.updateDocument(path, subject, email, key, projectId));
+        FirestoreApp.updateDocument(path, subject, email, key, projectId);
     }
 
 }
@@ -29,10 +27,7 @@ function getSubjectById(languageCode, subjectsData, syllabusLessonData) {
     //  the loop in case a child is encountered before parent.
     var subjectHasChildrenMap = {};
 
-    var currentRow = 0;
-    var row = sortedData[currentRow];
-
-    while (row && row[SUBJECTS_COLUMNS[NAME][languageCode]]) {
+    forRowsWithLanguageName(sortedData, SUBJECTS_COLUMNS[NAME][languageCode], function(row){
         var idAndObject = getIdAndObjectFromRow(row, SUBJECTS_COLUMNS, languageCode);
         var subjectId = idAndObject[ID];
         var subjectObject = idAndObject[OBJECT];
@@ -53,10 +48,7 @@ function getSubjectById(languageCode, subjectsData, syllabusLessonData) {
 
         addBoardDataToSubject(subjectId, subjectObject, syllabusLessonData);
         subjectsById[subjectId] = subjectObject;
-
-        currentRow++;
-        row = sortedData[currentRow];
-    }
+    });
 
     return subjectsById;
 }
@@ -65,14 +57,7 @@ function addBoardDataToSubject(subjectId, subject, syllabusLessonData) {
     // NOTE: This ignores language. Will show same standards/board for lessons in all languages.
 
     var syllabusLessonsForSubject = ArrayLib.filterByText(syllabusLessonData, SYLLABUS_COLUMNS[SUBJECT], subjectId);
-
-    Logger.log("SYL LES FOR SUBJ:");
-    Logger.log(syllabusLessonsForSubject);
-
     var uniqueBoards = ArrayLib.unique(syllabusLessonsForSubject, SYLLABUS_COLUMNS[BOARD]);
-
-    Logger.log("UNIOQUE BOARDSJ:");
-    Logger.log(syllabusLessonsForSubject);
 
     var boardsObject = {};
     var boardStandardsObject = {};
@@ -80,13 +65,7 @@ function addBoardDataToSubject(subjectId, subject, syllabusLessonData) {
     for (var i = 0; i < uniqueBoards.length; i++) {
         var row = uniqueBoards[i];
         var boardId = row[SYLLABUS_COLUMNS[BOARD]];
-
-        Logger.log("**BOARD ID:**");
-        Logger.log(boardId);
-
-        Logger.log("**BOARD STANDARDS**");
         var boardStandards = getBoardStandards(boardId, syllabusLessonData);
-        Logger.log(boardStandards);
 
         boardsObject[boardId] = true;
         boardStandardsObject[boardId] = boardStandards;
