@@ -2,7 +2,7 @@ function writeSubjectIds(subjectsSheet) {
     writeIds(subjectsSheet, SUBJECTS_COLUMNS[ID], generateSubjectIdFromRow);
 }
 
-function writeSubjectsToFirebaseForLanguage(languageCode, subjectsData, syllabusLessonData) {
+function writeSubjectsToFirestoreForLanguage(languageCode, subjectsData, syllabusLessonData) {
     const subjectsById = getSubjectById(languageCode, subjectsData, syllabusLessonData);
 
     const subjectIds = Object.keys(subjectsById);
