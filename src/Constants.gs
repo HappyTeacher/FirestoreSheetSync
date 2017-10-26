@@ -26,6 +26,7 @@ var AUTHOR_LOCATION = "authorLocation";
 var SUBTOPIC = "subtopic";
 var BOARD_LEVELS = "boardLevels";
 var LEVEL_SUBTOPICS = "level_subtopics";
+var SYLLABUS_LESSONS = "syllabus_lessons";
 
 //// Sheet: Boards
 var BOARDS_COLUMNS = {};
@@ -92,6 +93,12 @@ SUBTOPIC_BOARD_LEVEL_COLUMNS[SUBTOPIC] = 0;
 SUBTOPIC_BOARD_LEVEL_COLUMNS[BOARD] = 1;
 SUBTOPIC_BOARD_LEVEL_COLUMNS[LEVEL] = 2;
 
+//// Sheet: Topic, Subtopic * Board Lesson
+var BOARDLESSON_TOPIC_PAIR_COLUMNS = {};
+BOARDLESSON_TOPIC_PAIR_COLUMNS[LESSON] = 0;
+BOARDLESSON_TOPIC_PAIR_COLUMNS[TOPIC] = 1;
+BOARDLESSON_TOPIC_PAIR_COLUMNS[SUBTOPIC] = 2;
+
 //// Sheet: Subjects
 var SUBJECTS_COLUMNS = {};
 SUBJECTS_COLUMNS[ID] = 0;
@@ -107,4 +114,4 @@ var LEVELS_COLUMNS = {};
 LEVELS_COLUMNS[NUMBER] = 0;
 
 //// Other:
-var ID_DIV = " ~ ";
+var ID_DIV = " () ";
