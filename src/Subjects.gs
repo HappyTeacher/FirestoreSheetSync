@@ -5,16 +5,23 @@ function writeSubjectIds(subjectsSheet) {
 function writeSubjectsToFirestoreForLanguage(languageCode, subjectsData, syllabusLessonData) {
     const subjectsById = getSubjectById(languageCode, subjectsData, syllabusLessonData);
 
+    const subjectCollectionPath = "localized/" + languageCode + "/subjects";
+    const previousIds = FirestoreApp.getDocumentIds(subjectCollectionPath, email, key, projectId);
+    const newIds = [];
+
     const subjectIds = Object.keys(subjectsById);
     for (var i = 0; i < subjectIds.length; i++) {
         var id = subjectIds[i];
         var subject = subjectsById[id];
 
-        var path = "localized/" + languageCode + "/subjects/" + id;
+        newIds.push(id);
+
+        var path = subjectCollectionPath + "/" + id;
 
         FirestoreApp.updateDocument(path, subject, email, key, projectId);
     }
 
+    deleteDocumentDiffs(previousIds, newIds, subjectCollectionPath)
 }
 
 function getSubjectById(languageCode, subjectsData, syllabusLessonData) {
