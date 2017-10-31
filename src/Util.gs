@@ -16,7 +16,7 @@ function getIdAndObjectFromRow(row, columnObject, languageCode) {
 		var key = keys[i];
 		var column;
 
-		if (key == NAME && columnObject[key][languageCode]) {
+		if (key === NAME && columnObject[key][languageCode]) {
 			column = columnObject[key][languageCode];
 		} else {
 			column = columnObject[key];
@@ -56,4 +56,48 @@ function writeIdAtRowNumber(rowNumber, sheet, data, idColumn, idGenerator) {
 	var idCell = sheet.getRange(rowNumber + 1, idColumn + 1);
 	idCell.setValue(id);
 	idCell.setBackground("green");
+}
+
+/**
+ * Iterate over the given data until the data at column nameColumn
+ * 	is empty. At each iteration, run the loopFunction, which can take
+ * 	a row array as a parameter.
+ */
+function forRowsWithLanguageName(data, columnObject, languageCode, loopFunction) {
+    var sortedData = getDataSortedByLanguage(data, columnObject, languageCode);
+
+    var currentRow = 0;
+    var row = sortedData[currentRow];
+
+    while (row && row[columnObject[NAME][languageCode]]) {
+        loopFunction(row);
+        currentRow++;
+        row = sortedData[currentRow];
+    }
+}
+
+/**
+ * Filter a 2D array into a 2D array where the given column equals
+ *  the given value.
+ *
+ *  (This is a replacement helper function of the filterByText function
+ *   in the ArrayLib library. The ArrayLib version of the function does
+ *   not do an exact match, but rather checks if the element at the column
+ *   contains the value).
+ *
+ * @param data the 2D array
+ * @param column the column of the value to check
+ * @param value the value to check
+ * @returns {Array} the filtered array
+ */
+function filterExactByText(data, column, value) {
+    filteredArray = [];
+    for (var i = 0; i < data.length; i++) {
+        var row = data[i];
+        if (row[column] === value) {
+            filteredArray.push(row);
+        }
+    }
+
+    return filteredArray;
 }
