@@ -15,6 +15,9 @@ function createCardListContentAtPath(path, cardListContent, sheetData, sheet, ca
 function writeCardsToFirestore(path, sheetData, sheet, cardRowStart) {
     const cardIdColumn = 14;
 
+    const previousCardIds = FirestoreApp.getDocumentIds(path + "/cards", email, key, projectId);
+    const newCardIds = [];
+
     for (var i = cardRowStart; i < sheetData.length; i++) {
         var row = sheetData[i];
         var card = getCardFromRow(row, i);
@@ -22,11 +25,21 @@ function writeCardsToFirestore(path, sheetData, sheet, cardRowStart) {
 
         if (cardId) {
             var resp = FirestoreApp.updateDocument(path + "/cards/" + cardId, card, email, key, projectId);
-            Logger.log(resp);
+            newCardIds.push(cardId)
         } else {
             var response = FirestoreApp.createDocument(path + "/cards/", card, email, key, projectId);
             var id = getContentIdFromResponse(response);
+            newCardIds.push(id);
             sheet.getRange(i + 1, cardIdColumn + 1).setValue(id);
+        }
+    }
+
+    // Delete any cards that are no longer in this resource:
+    for (var j = 0; j < previousCardIds.length; j++) {
+        var previousCardId = previousCardIds[j];
+        if (!contains(newCardIds, previousCardId)) {
+            var cardPath = path + "/cards/" + previousCardId;
+            FirestoreApp.deleteDocument(cardPath, email, key, projectId);
         }
     }
 }
