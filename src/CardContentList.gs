@@ -34,41 +34,7 @@ function writeCardsToFirestore(path, sheetData, sheet, cardRowStart) {
         }
     }
 
-    // Delete any cards that are no longer in this resource:
-    for (var j = 0; j < previousCardIds.length; j++) {
-        var previousCardId = previousCardIds[j];
-        if (!contains(newCardIds, previousCardId)) {
-            var cardPath = path + "/cards/" + previousCardId;
-            FirestoreApp.deleteDocument(cardPath, email, key, projectId);
-        }
-    }
-}
-
-function createLessonHeader(lessonData, subtopicName, subjectName, syllabusLessons) {
-    const lessonObject = {};
-
-    var topicId = lessonData[0][1];
-    var subtopicId = lessonData[1][1];
-    var authorEmail = lessonData[2][1];
-    var authorName = lessonData[3][1];
-    var authorInstitution = lessonData[4][1];
-    var authorLocation = lessonData[5][1];
-    var dateEdited = lessonData[6][1];
-    var isFeatured = lessonData[9][1];
-
-    lessonObject[AUTHOR_EMAIL] = authorEmail;
-    lessonObject[AUTHOR_NAME] = authorName;
-    lessonObject[AUTHOR_INSTITUTION] = authorInstitution;
-    lessonObject[AUTHOR_LOCATION] = authorLocation;
-    lessonObject[DATE_EDITED] = Date.parse(dateEdited);
-    lessonObject[TOPIC] = topicId;
-    lessonObject[SUBTOPIC] = subtopicId;
-    lessonObject[IS_FEATURED] = isFeatured;
-    lessonObject[NAME] = subtopicName;
-    lessonObject[SUBJECT_NAME] = subjectName;
-    lessonObject[SYLLABUS_LESSONS] = syllabusLessons;
-
-    return lessonObject;
+    deleteDocumentDiffs(previousCardIds, newCardIds, path + "/cards");
 }
 
 function getCardFromRow(row, cardNumber) {

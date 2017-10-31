@@ -110,3 +110,31 @@ function contains(array, element) {
     }
     return false;
 }
+
+function forEach(array, func) {
+    for (var i = 0; i < array.length; i++) {
+        var element = array[i];
+        func(element);
+    }
+}
+
+function deleteDocumentDiffs(previousIds, newIds, collectionPath) {
+    const IdsToDelete = getRemovedItems(previousIds, newIds);
+
+    forEach(IdsToDelete, function(id) {
+        var documentPath = collectionPath + "/" + id;
+        FirestoreApp.deleteDocument(documentPath, email, key, projectId);
+    })
+}
+
+function getRemovedItems(previousItems, newItems) {
+    const removedItems = [];
+    for (var i = 0; i < previousItems.length; i++) {
+        var previousItem = previousItems[i];
+        if (!contains(newItems, previousItem)) {
+            removedItems.push(previousItem);
+        }
+    }
+
+    return removedItems;
+}
