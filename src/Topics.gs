@@ -28,6 +28,7 @@ function writeSubtopicsToTopic(topicPath, topicId, languageCode, subtopicsData, 
         var idAndObject = getIdAndObjectFromRow(row, SUBTOPICS_COLUMNS, languageCode);
         var subtopicId = idAndObject[ID];
         var subtopicObject = idAndObject[OBJECT];
+        subtopicObject[TOPIC] = topicId;
 
         var subtopicPath = topicPath + "/subtopics/" + subtopicId;
         FirestoreApp.updateDocument(subtopicPath, subtopicObject, email, key, projectId);
