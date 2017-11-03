@@ -38,6 +38,7 @@ var IMAGES = "imageUrls";
 var YOUTUBE_ID = "youtubeId";
 var LINK_URLS = "linkUrls";
 var ATTACHMENT_PATH = "attachmentPath";
+var TOPIC_NAME = "topicName";
 
 //// Sheet: Boards
 var BOARDS_COLUMNS = {};
