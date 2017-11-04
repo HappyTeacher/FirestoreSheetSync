@@ -2,7 +2,7 @@ function writeTopicIds(topicsSheet) {
     writeIds(topicsSheet, TOPICS_COLUMNS[ID], generateTopicIdFromRow);
 }
 
-function writeTopicsToFirestoreForLanguage(languageCode, topicsData, subtopicsData, subjectsData, boardLessonTopicPairData) {
+function writeTopicsToFirestoreForLanguage(languageCode, topicsData, boardLessonTopicPairData) {
 
     const topicsCollectionPath = "localized/" + languageCode + "/topics";
 
