@@ -7,6 +7,9 @@ function writeSubtopicIds(subtopicsSheet) {
 }
 
 function writeTopicsToFirestoreForLanguage(languageCode, topicsData, subtopicsData, subjectsData, boardLessonTopicPairData) {
+
+    const topicsCollectionPath = "localized/" + languageCode + "/topics";
+
     forRowsWithLanguageName(topicsData, TOPICS_COLUMNS, languageCode, function(row) {
         var idAndObject = getIdAndObjectFromRow(row, TOPICS_COLUMNS, languageCode);
         var topicId = idAndObject[ID];
@@ -14,7 +17,7 @@ function writeTopicsToFirestoreForLanguage(languageCode, topicsData, subtopicsDa
 
         topicObject[SYLLABUS_LESSONS] = getAssociatedSyllabusLessonsForTopic(topicId, boardLessonTopicPairData);
 
-        var path = "localized/" + languageCode + "/topics/" + topicId;
+        var path = topicsCollectionPath + "/" + topicId;
         FirestoreApp.updateDocument(path, topicObject, email, key, projectId);
 
         var topicSubjects = filterExactByText(subjectsData, SUBJECTS_COLUMNS[ID], topicObject[SUBJECT]);
@@ -22,11 +25,15 @@ function writeTopicsToFirestoreForLanguage(languageCode, topicsData, subtopicsDa
 
         writeSubtopicsToTopic(path, topicId, topicObject[SUBJECT], topicObject[NAME], subjectName, languageCode, subtopicsData);
     });
+
+    performDeletionsIfAvailable(topicsData, TOPICS_COLUMNS, topicsCollectionPath);
 }
 
 function writeSubtopicsToTopic(topicPath, topicId, subjectId, topicName, subjectName, languageCode, subtopicsData) {
     var subtopicsForTopic = filterExactByText(subtopicsData, SUBTOPICS_COLUMNS[TOPIC], topicId);
 
+    const subtopicsCollectionPath =  topicPath + "/subtopics";
+//todo: don't nest subtopics. it makes it harder to delete them.
     forRowsWithLanguageName(subtopicsForTopic, SUBTOPICS_COLUMNS, languageCode, function(row) {
         var idAndObject = getIdAndObjectFromRow(row, SUBTOPICS_COLUMNS, languageCode);
         var subtopicId = idAndObject[ID];
@@ -36,9 +43,12 @@ function writeSubtopicsToTopic(topicPath, topicId, subjectId, topicName, subject
         subtopicObject[SUBJECT_NAME] = subjectName;
         subtopicObject[TOPIC_NAME] = topicName;
 
-        var subtopicPath = topicPath + "/subtopics/" + subtopicId;
+        var subtopicPath = subtopicsCollectionPath + "/" + subtopicId;
         FirestoreApp.updateDocument(subtopicPath, subtopicObject, email, key, projectId);
     });
+
+    Logger.log("Deleting subtopics i think");
+    performDeletionsIfAvailable(subtopicsData, SUBTOPICS_COLUMNS, subtopicsCollectionPath);
 }
 
 function getAssociatedSyllabusLessonsForTopic(topicId, boardLessonTopicPairData) {

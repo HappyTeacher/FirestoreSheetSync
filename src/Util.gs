@@ -118,20 +118,11 @@ function forEach(array, func) {
     }
 }
 
-function deleteDocumentDiffs(previousIds, newIds, collectionPath) {
-    const IdsToDelete = getRemovedItems(previousIds, newIds);
-
-    forEach(IdsToDelete, function(id) {
-        var documentPath = collectionPath + "/" + id;
-        FirestoreApp.deleteDocument(documentPath, email, key, projectId);
-    })
-}
-
 function getRemovedItems(previousItems, newItems) {
     const removedItems = [];
     for (var i = 0; i < previousItems.length; i++) {
         var previousItem = previousItems[i];
-        if (!contains(newItems, previousItem)) {
+        if (previousItem && newItems.indexOf(previousItem) === -1) {
             removedItems.push(previousItem);
         }
     }

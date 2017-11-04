@@ -3,6 +3,9 @@ function writeSyllabusLessonIds(syllabusLessonSheet) {
 }
 
 function writeSyllabusLessonsToFirestoreForLanguage(languageCode, syllabusLessonData, boardLessonTopicPairData) {
+
+    const syllabusLessonCollectionPath = "localized/" + languageCode + "/syllabus_lessons";
+
     forRowsWithLanguageName(syllabusLessonData, SYLLABUS_COLUMNS, languageCode, function(row) {
         var idAndObject = getIdAndObjectFromRow(row, SYLLABUS_COLUMNS, languageCode);
         var lessonId = idAndObject[ID];
@@ -10,9 +13,11 @@ function writeSyllabusLessonsToFirestoreForLanguage(languageCode, syllabusLesson
 
         lessonObject[TOPIC_COUNT] = countAssociatedTopics(lessonId, boardLessonTopicPairData);
 
-        var path = "localized/" + languageCode + "/syllabus_lessons/" + lessonId;
+        var path = syllabusLessonCollectionPath + "/" + lessonId;
         FirestoreApp.updateDocument(path, lessonObject, email, key, projectId);
     });
+
+    performDeletionsIfAvailable(syllabusLessonData, SYLLABUS_COLUMNS, syllabusLessonCollectionPath);
 }
 
 function countAssociatedTopics(lessonId, boardLessonTopicPairData) {
