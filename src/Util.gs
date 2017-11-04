@@ -129,3 +129,7 @@ function getRemovedItems(previousItems, newItems) {
 
     return removedItems;
 }
+
+function getColumnAsArray(data, column) {
+    return data.map(function(value, i) { return value[column] });
+}

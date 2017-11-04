@@ -53,7 +53,7 @@ function performDeletionsIfAvailable(modelSheetData, modelColumnsObject, collect
     Logger.log("Performing deletions.");
     var modelRowNumber = modelColumnsObject[DB_WRITES_ROW_NUMBER];
 
-    var currentIds = modelSheetData.map(function(value, i) { return value[modelColumnsObject[ID]] });
+    var currentIds = getColumnAsArray(modelSheetData, modelColumnsObject[ID]);
     var previousIds = getIdsWritten(modelRowNumber);
 
     deleteDocumentDiffs(previousIds, currentIds, collectionPath);
