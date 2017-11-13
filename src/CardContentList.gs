@@ -92,3 +92,21 @@ function getContentIdFromResponse(response) {
     const id = fullPath.split("/").pop();
     return id;
 }
+
+function pullDocumentWithCards(documentPath) {
+    const document = FirestoreApp.getDocumentFields(documentPath, email, key, projectId);
+
+    const cardsPath = documentPath + "/cards";
+    const cardIds = FirestoreApp.getDocumentIds(cardsPath, email, key, projectId);
+    const cardsById = {};
+    for (var i = 0; i < cardIds.length; i++) {
+        var cardId = cardIds[i];
+        var cardPath = cardsPath + "/" + cardId;
+        var card = FirestoreApp.getDocumentFields(cardPath, email, key, projectId);
+        cardsById[cardId] = card;
+    }
+
+    document["cardsById"] = cardsById;
+
+    return document;
+}
