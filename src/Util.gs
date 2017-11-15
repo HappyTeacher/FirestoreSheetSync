@@ -152,4 +152,6 @@ function getNameInFirstLanguageAvailable(row, columnsObject) {
     if (hindiName) {
         return hindiName;
     }
+
+    throw new Error("ID generation error! No name found for row: " + row);
 }
