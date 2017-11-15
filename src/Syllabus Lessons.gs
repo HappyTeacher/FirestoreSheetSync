@@ -30,7 +30,7 @@ function generateSyllabusLessonIdFromRow(row) {
     var board = row[SYLLABUS_COLUMNS[BOARD]];
     var level = row[SYLLABUS_COLUMNS[LEVEL]];
     var subject = row[SYLLABUS_COLUMNS[SUBJECT]];
-    var lessonNameEnglish = row[SYLLABUS_COLUMNS[NAME][ENGLISH_LOCALE]];
+    var lessonName = getNameInFirstLanguageAvailable(row, SYLLABUS_COLUMNS);
 
-    return (board + ID_DIV + level + ID_DIV + subject + ID_DIV + lessonNameEnglish).toLowerCase();
+    return (board + ID_DIV + level + ID_DIV + subject + ID_DIV + lessonName).toLowerCase();
 }

@@ -98,11 +98,11 @@ function getBoardStandards(boardId, syllabusLessonData, languageCode) {
 
 function generateSubjectIdFromRow(row) {
     var parentSubjectId = row[SUBJECTS_COLUMNS[PARENT_SUBJECT]];
-    var nameEnglish = row[SUBJECTS_COLUMNS[NAME][ENGLISH_LOCALE]];
+    var title = getNameInFirstLanguageAvailable(row, SUBJECTS_COLUMNS);
 
     if (parentSubjectId) {
-        return (parentSubjectId + ID_DIV + nameEnglish).toLowerCase();
+        return (parentSubjectId + ID_DIV + title).toLowerCase();
     } else {
-        return nameEnglish.toLowerCase()
+        return title.toLowerCase()
     }
 }

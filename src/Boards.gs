@@ -20,6 +20,6 @@ function writeBoardsToFirestoreForLanguage(languageCode, boardData) {
 }
 
 function generateBoardIdFromRow(row) {
-  var boardTitleEnglish = row[BOARDS_COLUMNS[NAME][ENGLISH_LOCALE]];
-  return boardTitleEnglish.toLowerCase();
+  var boardTitle = getNameInFirstLanguageAvailable(row, BOARDS_COLUMNS);
+  return boardTitle.toLowerCase();
 }

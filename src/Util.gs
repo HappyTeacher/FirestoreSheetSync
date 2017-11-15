@@ -133,3 +133,23 @@ function getRemovedItems(previousItems, newItems) {
 function getColumnAsArray(data, column) {
     return data.map(function(value, i) { return value[column] });
 }
+
+function getNameInFirstLanguageAvailable(row, columnsObject) {
+    var englishName = row[columnsObject[NAME][ENGLISH_LOCALE]];
+
+    if (englishName) {
+        return englishName;
+    }
+
+    var marathiName = row[columnsObject[NAME][MARATHI_LOCALE]];
+
+    if (marathiName) {
+        return marathiName;
+    }
+
+    var hindiName = row[columnsObject[NAME][HINDI_LOCALE]];
+
+    if (hindiName) {
+        return hindiName;
+    }
+}

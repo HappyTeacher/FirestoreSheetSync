@@ -40,6 +40,6 @@ function getAssociatedLessonsForColumn(id, columnNumber, boardLessonTopicPairDat
 
 function generateTopicIdFromRow(row) {
     var subject = row[TOPICS_COLUMNS[SUBJECT]];
-    var topic = row[TOPICS_COLUMNS[NAME][ENGLISH_LOCALE]];
+    var topic = getNameInFirstLanguageAvailable(row, TOPICS_COLUMNS);
     return (subject + ID_DIV + topic).toLowerCase();
 }
