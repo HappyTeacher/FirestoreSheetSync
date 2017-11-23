@@ -134,24 +134,64 @@ function getColumnAsArray(data, column) {
     return data.map(function(value, i) { return value[column] });
 }
 
-function getNameInFirstLanguageAvailable(row, columnsObject) {
-    var englishName = row[columnsObject[NAME][ENGLISH_LOCALE]];
+/**
+ * Determine which name from a row to use in an ID and return it.
+ *
+ *  If a name was already assigned to the ID, use that name if it still
+ *  exists in the row. Otherwise, choose the name in the first available
+ *  language.
+ */
+function getNameFromRowForId(row, columnsObject, currentNameInId) {
+    const englishName = row[columnsObject[NAME][ENGLISH_LOCALE]];
+    const marathiName = row[columnsObject[NAME][MARATHI_LOCALE]];
+    const hindiName = row[columnsObject[NAME][HINDI_LOCALE]];
 
-    if (englishName) {
-        return englishName;
+    const names = [englishName, marathiName, hindiName];
+
+    // If the ID already has a name in it, use that name if it is unchanged in the new row.
+    //  (e.g. if the ID was first assigned with a Marathi name and then an English name was
+    //        added, don't change the ID to use the English name now. Keep it the same).
+    if (contains(names, currentNameInId)) {
+        return currentNameInId;
     }
 
-    var marathiName = row[columnsObject[NAME][MARATHI_LOCALE]];
+    const nameForRowId = getFirstTruthy(names);
 
-    if (marathiName) {
-        return marathiName;
+    if (nameForRowId) {
+        return nameForRowId
+    } else {
+        throw new Error("ID generation error! No name found for row: " + row);
+    }
+}
+
+/**
+ * Return the first non-falsey element in an array.
+ *  If all elements are falsey, return null.
+ * @param array the array of items to check
+ */
+function getFirstTruthy(array) {
+    for (var i = 0; i < array.length; i++) {
+        var element = array[i];
+        if (element) {
+            return element
+        }
     }
 
-    var hindiName = row[columnsObject[NAME][HINDI_LOCALE]];
+    return null;
+}
 
-    if (hindiName) {
-        return hindiName;
+function getLastPieceFromIdOrNull(row, columnObject) {
+    const id = row[columnObject[ID]];
+
+    if (!id) {
+        return null
     }
 
-    throw new Error("ID generation error! No name found for row: " + row);
+    const idPieces = id.split(ID_DIV);
+    const length = idPieces.length;
+    if (length > 0) {
+        return idPieces[length - 1];
+    } else {
+        return null;
+    }
 }

@@ -33,7 +33,9 @@ function writeSubtopicsToFirestoreForLanguage(languageCode, subtopicsData, topic
 }
 
 function generateSubtopicIdFromRow(row) {
+    var currentTitleInId = getLastPieceFromIdOrNull(row, BOARDS_COLUMNS);
+
     var topic = row[SUBTOPICS_COLUMNS[TOPIC]];
-    var name = getNameInFirstLanguageAvailable(row, SUBTOPICS_COLUMNS);
+    var name = getNameFromRowForId(row, SUBTOPICS_COLUMNS, currentTitleInId);
     return (topic + ID_DIV + name).toLowerCase();
 }

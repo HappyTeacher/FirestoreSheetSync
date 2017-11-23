@@ -97,8 +97,10 @@ function getBoardStandards(boardId, syllabusLessonData, languageCode) {
 }
 
 function generateSubjectIdFromRow(row) {
+    var currentTitleInId = getLastPieceFromIdOrNull(row, SUBJECTS_COLUMNS);
+
     var parentSubjectId = row[SUBJECTS_COLUMNS[PARENT_SUBJECT]];
-    var title = getNameInFirstLanguageAvailable(row, SUBJECTS_COLUMNS);
+    var title = getNameFromRowForId(row, SUBJECTS_COLUMNS, currentTitleInId);
 
     if (parentSubjectId) {
         return (parentSubjectId + ID_DIV + title).toLowerCase();

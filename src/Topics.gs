@@ -39,7 +39,9 @@ function getAssociatedLessonsForColumn(id, columnNumber, boardLessonTopicPairDat
 }
 
 function generateTopicIdFromRow(row) {
+    var currentTopicNameInId = getLastPieceFromIdOrNull(row, BOARDS_COLUMNS);
+
     var subject = row[TOPICS_COLUMNS[SUBJECT]];
-    var topic = getNameInFirstLanguageAvailable(row, TOPICS_COLUMNS);
+    var topic = getNameFromRowForId(row, TOPICS_COLUMNS, currentTopicNameInId);
     return (subject + ID_DIV + topic).toLowerCase();
 }

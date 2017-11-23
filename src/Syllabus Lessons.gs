@@ -27,10 +27,12 @@ function countAssociatedTopics(lessonId, boardLessonTopicPairData) {
 }
 
 function generateSyllabusLessonIdFromRow(row) {
+    var currentLessonNameInId = getLastPieceFromIdOrNull(row, BOARDS_COLUMNS);
+
     var board = row[SYLLABUS_COLUMNS[BOARD]];
     var level = row[SYLLABUS_COLUMNS[LEVEL]];
     var subject = row[SYLLABUS_COLUMNS[SUBJECT]];
-    var lessonName = getNameInFirstLanguageAvailable(row, SYLLABUS_COLUMNS);
+    var lessonName = getNameFromRowForId(row, SYLLABUS_COLUMNS, currentLessonNameInId);
 
     return (board + ID_DIV + level + ID_DIV + subject + ID_DIV + lessonName).toLowerCase();
 }
