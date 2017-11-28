@@ -34,5 +34,15 @@ function generateSyllabusLessonIdFromRow(row) {
     var subject = row[SYLLABUS_COLUMNS[SUBJECT]];
     var lessonName = getNameFromRowForId(row, SYLLABUS_COLUMNS, currentLessonNameInId);
 
+    if (!board) {
+        throw new Error("Board lesson ID generation error: No board given for row " + row);
+    } else if (!level) {
+        throw new Error("Board lesson ID generation error: No level given for row " + row);
+    } else if (!subject) {
+        throw new Error("Board lesson ID generation error: No subject given for row " + row);
+    } else if (!lessonName) {
+        throw new Error("Board lesson ID generation error: No lesson name given for row " + row);
+    }
+
     return (board + ID_DIV + level + ID_DIV + subject + ID_DIV + lessonName).toLowerCase();
 }

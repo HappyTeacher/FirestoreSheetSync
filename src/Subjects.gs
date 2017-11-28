@@ -102,6 +102,10 @@ function generateSubjectIdFromRow(row) {
     var parentSubjectId = row[SUBJECTS_COLUMNS[PARENT_SUBJECT]];
     var title = getNameFromRowForId(row, SUBJECTS_COLUMNS, currentTitleInId);
 
+    if (!title) {
+        throw new Error("Subject ID generation error: no subject name given for row " + row);
+    }
+
     if (parentSubjectId) {
         return (parentSubjectId + ID_DIV + title).toLowerCase();
     } else {

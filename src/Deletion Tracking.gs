@@ -61,10 +61,6 @@ function performDeletionsIfAvailable(modelSheetData, modelColumnsObject, collect
 }
 
 function deleteDocumentDiffs(previousIds, newIds, collectionPath) {
-    Logger.log("Attempting delete. prev /  new");
-    Logger.log(previousIds);
-    Logger.log(newIds);
-
     const IdsToDelete = getRemovedItems(previousIds, newIds);
 
     forEach(IdsToDelete, function(id) {

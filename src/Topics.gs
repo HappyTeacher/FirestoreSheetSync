@@ -43,5 +43,12 @@ function generateTopicIdFromRow(row) {
 
     var subject = row[TOPICS_COLUMNS[SUBJECT]];
     var topic = getNameFromRowForId(row, TOPICS_COLUMNS, currentTopicNameInId);
+
+    if (!subject) {
+        throw new Error("Topic ID generation error: No subject given for row " + row);
+    } else if (!topic) {
+        throw new Error("Topic ID generation error: No topic name given for row " + row);
+    }
+
     return (subject + ID_DIV + topic).toLowerCase();
 }

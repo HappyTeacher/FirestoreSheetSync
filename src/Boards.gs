@@ -22,5 +22,10 @@ function writeBoardsToFirestoreForLanguage(languageCode, boardData) {
 function generateBoardIdFromRow(row) {
     var currentTitleInId = getLastPieceFromIdOrNull(row, BOARDS_COLUMNS);
     var boardTitle = getNameFromRowForId(row, BOARDS_COLUMNS, currentTitleInId);
+
+    if (!boardTitle) {
+        throw new Error("Board ID generation error: No board name given for row " + row);
+    }
+
     return boardTitle.toLowerCase();
 }

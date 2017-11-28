@@ -37,5 +37,12 @@ function generateSubtopicIdFromRow(row) {
 
     var topic = row[SUBTOPICS_COLUMNS[TOPIC]];
     var name = getNameFromRowForId(row, SUBTOPICS_COLUMNS, currentTitleInId);
+
+    if (!topic) {
+        throw new Error("Subtopic ID generation error: No topic given for row " + row);
+    } else if (!name) {
+        throw new Error("Subtopic ID generation error: No subtopic name given for row " + row);
+    }
+
     return (topic + ID_DIV + name).toLowerCase();
 }

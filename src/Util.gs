@@ -156,12 +156,7 @@ function getNameFromRowForId(row, columnsObject, currentNameInId) {
     }
 
     const nameForRowId = getFirstTruthy(names);
-
-    if (nameForRowId) {
-        return nameForRowId
-    } else {
-        throw new Error("ID generation error! No name found for row: " + row);
-    }
+    return nameForRowId;
 }
 
 /**
