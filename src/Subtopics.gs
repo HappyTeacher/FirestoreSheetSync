@@ -2,7 +2,7 @@ function writeSubtopicIds(subtopicsSheet) {
     writeIds(subtopicsSheet, SUBTOPICS_COLUMNS[ID], generateSubtopicIdFromRow);
 }
 
-function writeSubtopicsToFirestoreForLanguage(languageCode, subtopicsData, topicsData, subjectsData) {
+function writeSubtopicsToFirestoreForLanguage(languageCode, subtopicsData, topicsData, subjectsData, boardLessonTopicPairData) {
 
     const subtopicsCollectionPath = "localized/" + languageCode + "/subtopics";
 
@@ -24,6 +24,7 @@ function writeSubtopicsToFirestoreForLanguage(languageCode, subtopicsData, topic
         subtopicObject[SUBJECT] = subjectId;
         subtopicObject[SUBJECT_NAME] = subjectName;
         subtopicObject[TOPIC_NAME] = topicName;
+        subtopicObject[SYLLABUS_LESSONS] = getAssociatedSyllabusLessonsForSubtopic(subtopicId, boardLessonTopicPairData);
 
         var subtopicPath = subtopicsCollectionPath + "/" + subtopicId;
         FirestoreApp.updateDocument(subtopicPath, subtopicObject, email, key, projectId);
