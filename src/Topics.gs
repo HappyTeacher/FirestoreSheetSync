@@ -14,7 +14,22 @@ function writeTopicsToFirestoreForLanguage(languageCode, topicsData, boardLesson
         topicObject[SYLLABUS_LESSONS] = getAssociatedSyllabusLessonsForTopic(topicId, boardLessonTopicPairData);
 
         var path = topicsCollectionPath + "/" + topicId;
-        FirestoreApp.updateDocument(path, topicObject, email, key, projectId);
+
+        try {
+            var existingTopicData = FirestoreApp.getDocumentFields(path, email, key, projectId);
+            var hasPendingSubmissions = existingTopicData["hasPendingSubmissions"];
+
+            if (hasPendingSubmissions) {
+                topicObject["hasPendingSubmissions"] = hasPendingSubmissions;
+            }
+
+            FirestoreApp.updateDocument(path, topicObject, email, key, projectId);
+        } catch (e) {
+            Logger.log("Error getting `hasPendingSubmissions` from existing topic model with ID " + topicId + " in Firestore. Perhaps the object doesn't exist yet.");
+            Logger.log(e);
+
+            FirestoreApp.updateDocument(path, topicObject, email, key, projectId);
+        }
     });
 
     performDeletionsIfAvailable(topicsData, TOPICS_COLUMNS, topicsCollectionPath);
