@@ -24,6 +24,10 @@ function getAssociatedSyllabusLessonsForTopic(topicId, boardLessonTopicPairData)
     return getAssociatedLessonsForColumn(topicId, BOARDLESSON_TOPIC_PAIR_COLUMNS[TOPIC], boardLessonTopicPairData);
 }
 
+function getAssociatedSyllabusLessonsForSubtopic(subtopicId, boardLessonTopicPairData) {
+    return getAssociatedLessonsForColumn(subtopicId, BOARDLESSON_TOPIC_PAIR_COLUMNS[SUBTOPIC], boardLessonTopicPairData);
+}
+
 function getAssociatedLessonsForColumn(id, columnNumber, boardLessonTopicPairData) {
     var lessonIdColumn = 0;
 
